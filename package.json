@@ -9,17 +9,21 @@
     "build": "tsup",
     "generate": "openapi-ts"
   },
+  "peerDependencies": {
+    "@hey-api/client-fetch": ">=0.7",
+    "firebase": ">=11"
+  },
+  "optionalDependencies": {
+    "react": ">=18"
+  },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.27.11",
     "@hey-api/openapi-ts": "^0.62.1",
+    "@types/react": "^19.0.7",
     "prettier": "^3.4.2",
     "tsup": "^8.3.5",
     "typescript": "^5.7.3"
-  },
-  "optionalDependencies": {
-    "@hey-api/client-fetch": "^0.7.0",
-    "firebase": ">=11"
   },
   "volta": {
     "node": "22.13.0"

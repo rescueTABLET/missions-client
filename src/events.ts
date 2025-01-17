@@ -1,0 +1,50 @@
+export type EventListener<
+  EventMap extends Record<string, unknown>,
+  Event extends keyof EventMap,
+> = (event: EventMap[Event]) => void;
+
+export class EventEmitter<EventMap extends Record<string, unknown>> {
+  readonly #listeners = new Map<
+    keyof EventMap,
+    Set<EventListener<EventMap, any>>
+  >();
+
+  addEventListener<T extends keyof EventMap>(
+    type: T,
+    listener: EventListener<EventMap, T>
+  ) {
+    let listeners = this.#listeners.get(type);
+    if (!listeners) {
+      listeners = new Set<EventListener<EventMap, any>>();
+      this.#listeners.set(type, listeners);
+    }
+    listeners.add(listener);
+  }
+
+  removeEventListener<T extends keyof EventMap>(
+    type: T,
+    listener: EventListener<EventMap, T>
+  ) {
+    let listeners = this.#listeners.get(type);
+    if (listeners) listeners.delete(listener);
+  }
+
+  protected emit<T extends keyof EventMap>(type: T, event: EventMap[T]) {
+    const listeners = this.#listeners.get(type);
+    if (listeners) {
+      for (const listener of listeners) {
+        listener(event);
+      }
+    }
+  }
+
+  protected close() {
+    for (const [type, listeners] of this.#listeners.entries()) {
+      for (const listener of listeners) {
+        this.removeEventListener(type, listener);
+      }
+    }
+
+    this.#listeners.clear();
+  }
+}

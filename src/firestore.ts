@@ -10,7 +10,7 @@ import {
 } from "./client";
 import type { RemoteMission } from "./types";
 
-export type FirebaseMissionData = Omit<
+export type FirestoreMission = Omit<
   Mission,
   | "id"
   | "resources"
@@ -30,9 +30,9 @@ export type FirebaseMissionData = Omit<
   patientIds?: ReadonlyArray<string>;
 };
 
-export function fromFirebaseMission(
+export function fromFirestoreMission(
   id: string,
-  data: FirebaseMissionData,
+  data: FirestoreMission,
   stale?: boolean
 ): RemoteMission {
   return {
@@ -57,3 +57,7 @@ function mapToArray<T extends Identifiable>(
     ...element,
   }));
 }
+
+export type FirestoreUser = {
+  missions: Record<string, boolean>;
+};

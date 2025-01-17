@@ -1,9 +1,9 @@
 import type { DocumentData } from "firebase/firestore";
 import { type Logger } from "./log";
-import type { IFirestore } from "./types";
+import type { IFirebase } from "./types";
 
 export async function onSnapshotWithBackoff<T extends DocumentData>(
-  firestore: IFirestore,
+  firestore: IFirebase,
   ref: string,
   onSnapshotCallback: (snapshot: { id: string; data?: T }) => void,
   {

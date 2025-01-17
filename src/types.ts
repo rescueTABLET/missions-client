@@ -36,7 +36,7 @@ export type DocumentSnapshotListener<T> = {
   error: (error: Error) => void;
 };
 
-export type IFirestore = {
+export type IFirebase = {
   onDocumentSnapshot<T>(
     ref: string,
     listener: DocumentSnapshotListener<T>
