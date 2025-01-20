@@ -1,14 +1,14 @@
-import {
-  type Action,
-  type Identifiable,
-  type MapElement,
-  type Mission,
-  type Patient,
-  type Report,
-  type Resource,
-  type Section,
-} from "./client";
-import type { RemoteMission } from "./types";
+import type {
+  Action,
+  Identifiable,
+  MapElement,
+  Mission,
+  Patient,
+  Report,
+  Resource,
+  Section,
+} from "./client/types.gen.js";
+import type { RemoteMission } from "./types.js";
 
 export type FirestoreMission = Omit<
   Mission,

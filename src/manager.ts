@@ -1,18 +1,18 @@
-import { type User } from "./client";
-import { EventEmitter } from "./events";
+import type { User } from "./client/types.gen.js";
+import { EventEmitter } from "./events.js";
 import {
   fromFirestoreMission,
   type FirestoreMission,
   type FirestoreUser,
-} from "./firestore";
-import { type Logger } from "./log";
-import { onSnapshotWithBackoff } from "./onSnapshotWithBackoff";
+} from "./firestore.js";
+import { type Logger } from "./log.js";
+import { onSnapshotWithBackoff } from "./onSnapshotWithBackoff.js";
 import type {
   IFirebase,
   ManagedMission,
   MissionsManagerEventTypes,
   RemoteMission,
-} from "./types";
+} from "./types.js";
 
 type Subscription = { unsubscribe(): void };
 

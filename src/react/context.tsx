@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from "react";
-import { type Missions } from "../../src";
+import { type Missions } from "../connect.js";
 
 const Context = createContext<Missions | undefined>(undefined);
 

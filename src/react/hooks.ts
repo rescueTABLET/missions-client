@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { ManagedMission, MissionsManagerEventListener } from "../types";
-import { useMissionsContext } from "./context";
+import type { ManagedMission, MissionsManagerEventListener } from "../types.js";
+import { useMissionsContext } from "./context.js";
 
 export function useMissions(): Record<string, ManagedMission> {
   const { manager } = useMissionsContext();

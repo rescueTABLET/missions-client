@@ -1,4 +1,4 @@
-import { type Mission, type Resource } from "./client";
+import type { Mission, Resource } from "./client/types.gen.js";
 
 export type RemoteMission = Mission & {
   removedResources?: ReadonlyArray<Resource>;

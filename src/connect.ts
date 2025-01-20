@@ -1,10 +1,10 @@
 import { type Client } from "@hey-api/client-fetch";
 import { type FirebaseApp } from "firebase/app";
-import { createMissionsClient } from "./api";
-import { type User } from "./client";
-import { connectMissionsFirebase, defaultFirebaseAdapter } from "./firebase";
-import { type Logger } from "./log";
-import { MissionsManager } from "./manager";
+import { createMissionsClient } from "./api.js";
+import { type User } from "./client/types.gen.js";
+import { connectMissionsFirebase, defaultFirebaseAdapter } from "./firebase.js";
+import { type Logger } from "./log.js";
+import { MissionsManager } from "./manager.js";
 
 export type ConnectMissionsOptions = {
   apiKey: string;

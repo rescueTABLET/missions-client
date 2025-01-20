@@ -1,8 +1,21 @@
-import { defineConfig } from "tsup";
+import { defineConfig, type Options } from "tsup";
 
-export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["esm", "cjs"],
+const common: Options = {
+  format: ["esm"],
   dts: true,
   clean: true,
-});
+  sourcemap: true,
+};
+
+export default defineConfig([
+  {
+    entry: ["./src/!(index).ts", "./src/*/!(index).ts?(x)"],
+    ...common,
+    bundle: false,
+  },
+  {
+    entry: ["src/index.ts", "src/*/index.ts"],
+    ...common,
+    bundle: false,
+  },
+]);

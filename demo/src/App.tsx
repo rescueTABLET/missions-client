@@ -1,13 +1,11 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { useActionState, useState } from "react";
+import { connectMissions, type ManagedMission, type Missions } from "../../src";
 import {
-  connectMissions,
-  type ManagedMission,
-  type Missions,
   MissionsContextProvider,
   useMissions,
   useMissionsContext,
-} from "../../src";
+} from "../../src/react";
 
 export default function App() {
   const [context, setContext] = useState<Missions>();

@@ -2,8 +2,9 @@ import { type Client } from "@hey-api/client-fetch";
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { doc, getFirestore, onSnapshot } from "firebase/firestore";
-import { getFirebaseConfig, user as getUser, type User } from "./client";
-import { type DocumentSnapshotListener, type IFirebase } from "./types";
+import { getFirebaseConfig, user as getUser } from "./client/sdk.gen.js";
+import type { User } from "./client/types.gen.js";
+import type { DocumentSnapshotListener, IFirebase } from "./types.js";
 
 export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
   return {
