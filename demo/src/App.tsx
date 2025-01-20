@@ -2,18 +2,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import { useActionState, useState } from "react";
 import {
   connectMissions,
-  createMissionsClient,
-  defaultFirebaseAdapter,
-  ManagedMission,
-  MissionsContext,
+  type ManagedMission,
+  type Missions,
   MissionsContextProvider,
-  MissionsManager,
   useMissions,
   useMissionsContext,
 } from "../../src";
 
 export default function App() {
-  const [context, setContext] = useState<MissionsContext>();
+  const [context, setContext] = useState<Missions>();
 
   return context ? (
     <MissionsContextProvider {...context}>
@@ -71,11 +68,7 @@ function MissionItem({ mission }: { mission: ManagedMission }) {
   );
 }
 
-function SignIn({
-  setContext,
-}: {
-  setContext: (context?: MissionsContext) => void;
-}) {
+function SignIn({ setContext }: { setContext: (context?: Missions) => void }) {
   const [apiKey, setApiKey] = useState("");
   const [error, submitAction, pending] = useActionState<
     Error | undefined,
@@ -87,14 +80,8 @@ function SignIn({
         throw new Error("No API key provided");
       }
 
-      const client = createMissionsClient({ apiKey });
-      const { user, firebase } = await connectMissions({ client });
-      const manager = new MissionsManager({
-        firebase: defaultFirebaseAdapter(firebase),
-        user,
-      });
-
-      setContext({ client, manager, user });
+      const context = await connectMissions({ apiKey });
+      setContext(context);
 
       return undefined;
     } catch (error: any) {

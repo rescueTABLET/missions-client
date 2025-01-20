@@ -19,7 +19,7 @@ export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
   };
 }
 
-export async function connectMissions(args: {
+export async function connectMissionsFirebase(args: {
   client: Client;
   firebaseAppName?: string;
 }): Promise<{ user: User; firebase: FirebaseApp }> {

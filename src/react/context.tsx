@@ -1,16 +1,9 @@
-import { type Client } from "@hey-api/client-fetch";
 import { createContext, useContext, type ReactNode } from "react";
-import { MissionsManager, type User } from "../../src";
+import { type Missions } from "../../src";
 
-export type MissionsContext = {
-  user: User;
-  client: Client;
-  manager: MissionsManager;
-};
+const Context = createContext<Missions | undefined>(undefined);
 
-const Context = createContext<MissionsContext | undefined>(undefined);
-
-export type MissionsContextProps = MissionsContext & { children: ReactNode };
+export type MissionsContextProps = Missions & { children: ReactNode };
 
 export function MissionsContextProvider({
   children,
@@ -19,7 +12,7 @@ export function MissionsContextProvider({
   return <Context.Provider value={context}>{children}</Context.Provider>;
 }
 
-export function useMissionsContext(): MissionsContext {
+export function useMissionsContext(): Missions {
   const context = useContext(Context);
   if (!context)
     throw new Error("useMissionsContext() requires a MissionsContextProvider");
