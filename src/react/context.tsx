@@ -1,15 +1,15 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, type PropsWithChildren, useContext } from "react";
 import { type Missions } from "../connect.js";
 
 const Context = createContext<Missions | undefined>(undefined);
 
-export type MissionsContextProps = Missions & { children: ReactNode };
+export type MissionsContextProps = PropsWithChildren<{ missions: Missions }>;
 
 export function MissionsContextProvider({
   children,
-  ...context
+  missions,
 }: MissionsContextProps) {
-  return <Context.Provider value={context}>{children}</Context.Provider>;
+  return <Context.Provider value={missions}>{children}</Context.Provider>;
 }
 
 export function useMissionsContext(): Missions {
