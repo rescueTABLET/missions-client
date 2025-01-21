@@ -278,23 +278,12 @@ export type MapElement = Identifiable & Timestamps & MapElementData;
 
 export type MapElementData = MapElementBaseData &
   Tagged &
-  MapElementTypeData & {
-    type?: "MapElementData";
-  };
-
-export type MapElementTypeData =
-  | ({
-      type?: "marker";
-    } & MarkerMapElementData)
-  | ({
-      type?: "polygon";
-    } & PolygonMapElementData)
-  | ({
-      type?: "polyline";
-    } & PolylineMapElementData)
-  | ({
-      type?: "circle";
-    } & CircleMapElementData);
+  (
+    | MarkerMapElementData
+    | PolygonMapElementData
+    | PolylineMapElementData
+    | CircleMapElementData
+  );
 
 export type IconMapSymbol = {
   type: "icon";
