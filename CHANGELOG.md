@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.1.5
+
+### Patch Changes
+
+- edce0ac: Fix typing of MapElement
+
 ## 0.1.4
 
 ### Patch Changes
