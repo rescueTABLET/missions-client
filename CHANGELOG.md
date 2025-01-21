@@ -1,5 +1,12 @@
 # @rescuetablet/missions-client
 
+## 0.1.3
+
+### Patch Changes
+
+- 7a5d5f0: Remove firebase from context
+- 7a5d5f0: Fix typing of User
+
 ## 0.1.2
 
 ### Patch Changes
