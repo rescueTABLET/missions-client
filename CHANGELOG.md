@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.1.4
+
+### Patch Changes
+
+- 0f862fc: Expose firebase instance
+
 ## 0.1.3
 
 ### Patch Changes
