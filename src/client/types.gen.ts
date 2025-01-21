@@ -274,20 +274,27 @@ export type MissionMapElementList = {
   items: Array<MapElement>;
 };
 
-export type MapElement = Identifiable &
-  Timestamps &
-  MapElementData & {
-    type?: "MapElement";
-  };
+export type MapElement = Identifiable & Timestamps & MapElementData;
 
 export type MapElementData = MapElementBaseData &
   Tagged &
-  (
-    | MarkerMapElementData
-    | PolygonMapElementData
-    | PolylineMapElementData
-    | CircleMapElementData
-  );
+  MapElementTypeData & {
+    type?: "MapElementData";
+  };
+
+export type MapElementTypeData =
+  | ({
+      type?: "marker";
+    } & MarkerMapElementData)
+  | ({
+      type?: "polygon";
+    } & PolygonMapElementData)
+  | ({
+      type?: "polyline";
+    } & PolylineMapElementData)
+  | ({
+      type?: "circle";
+    } & CircleMapElementData);
 
 export type IconMapSymbol = {
   type: "icon";
