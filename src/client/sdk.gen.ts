@@ -92,9 +92,9 @@ import type {
   GetReportFileData,
   GetReportFileResponse,
   GetReportFileError,
-  UserData2,
-  UserResponse,
-  UserError,
+  GetUserData,
+  GetUserResponse,
+  GetUserError,
   GetFirebaseConfigData,
   GetFirebaseConfigResponse,
   GetFirebaseConfigError,
@@ -892,21 +892,23 @@ export const getReportFile = <ThrowOnError extends boolean = false>(
 /**
  * Get user details
  */
-export const user = <ThrowOnError extends boolean = false>(
-  options?: Options<UserData2, ThrowOnError>,
+export const getUser = <ThrowOnError extends boolean = false>(
+  options?: Options<GetUserData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<UserResponse, UserError, ThrowOnError>(
-    {
-      security: [
-        {
-          name: "authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/user",
-      ...options,
-    },
-  );
+  return (options?.client ?? client).get<
+    GetUserResponse,
+    GetUserError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/user",
+    ...options,
+  });
 };
 
 /**

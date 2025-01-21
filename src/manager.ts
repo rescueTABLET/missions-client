@@ -1,4 +1,3 @@
-import type { User } from "./client/types.gen.js";
 import { EventEmitter } from "./events.js";
 import {
   fromFirestoreMission,
@@ -18,37 +17,37 @@ type Subscription = { unsubscribe(): void };
 
 export type MissionsManagerOptions = {
   firebase: IFirebase;
-  user: User;
+  userId: string;
   logger?: Logger;
 };
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   readonly missions = new Map<string, ManagedMission>();
 
-  readonly #user: User;
+  readonly #userId: string;
   readonly #firebase: IFirebase;
   readonly #logger?: Logger;
   readonly #subscriptions = new Map<string, Subscription>();
 
   constructor(options: MissionsManagerOptions) {
     super();
-    this.#user = options.user;
+    this.#userId = options.userId;
     this.#firebase = options.firebase;
     this.#logger = options.logger;
     this.#connect();
   }
 
   async #connect() {
-    this.#logger?.info(`Subscribing to user ${this.#user.id}…`);
+    this.#logger?.info(`Subscribing to user ${this.#userId}…`);
 
     const unsubscribe = await onSnapshotWithBackoff<FirestoreUser>(
       this.#firebase,
-      `users/${this.#user.id}`,
+      `users/${this.#userId}`,
       (snapshot) => {
         if (snapshot.data) {
           const missionIds = Object.keys(snapshot.data.missions ?? {});
           this.#logger?.verbose(
-            `Updated mission IDs for user ${this.#user.id}: ${missionIds.join(", ")}`
+            `Updated mission IDs for user ${this.#userId}: ${missionIds.join(", ")}`
           );
           this.#setMissionIds(missionIds);
         }

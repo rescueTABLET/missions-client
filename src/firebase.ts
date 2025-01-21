@@ -2,8 +2,8 @@ import { type Client } from "@hey-api/client-fetch";
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { doc, getFirestore, onSnapshot } from "firebase/firestore";
-import { getFirebaseConfig, user as getUser } from "./client/sdk.gen.js";
-import type { User } from "./client/types.gen.js";
+import { getFirebaseConfig, getUser } from "./client/sdk.gen.js";
+import type { UserInfo } from "./client/types.gen.js";
 import type { DocumentSnapshotListener, IFirebase } from "./types.js";
 
 export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
@@ -23,7 +23,7 @@ export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
 export async function connectMissionsFirebase(args: {
   client: Client;
   firebaseAppName?: string;
-}): Promise<{ user: User; firebase: FirebaseApp }> {
+}): Promise<{ user: UserInfo; firebase: FirebaseApp }> {
   const [user, firebaseConfig] = await Promise.all([
     getUser({ client: args.client, throwOnError: true }).then(
       (r: any) => r.data

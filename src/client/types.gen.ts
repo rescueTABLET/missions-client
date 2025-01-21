@@ -2034,14 +2034,14 @@ export type GetReportFileResponses = {
 export type GetReportFileResponse =
   GetReportFileResponses[keyof GetReportFileResponses];
 
-export type UserData2 = {
+export type GetUserData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/user";
 };
 
-export type UserErrors = {
+export type GetUserErrors = {
   /**
    * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
    */
@@ -2052,16 +2052,16 @@ export type UserErrors = {
   403: _Error;
 };
 
-export type UserError = UserErrors[keyof UserErrors];
+export type GetUserError = GetUserErrors[keyof GetUserErrors];
 
-export type UserResponses = {
+export type GetUserResponses = {
   /**
    * Successful response
    */
   200: UserInfo;
 };
 
-export type UserResponse = UserResponses[keyof UserResponses];
+export type GetUserResponse = GetUserResponses[keyof GetUserResponses];
 
 export type GetFirebaseConfigData = {
   body?: never;
