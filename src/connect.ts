@@ -1,4 +1,5 @@
 import { type Client } from "@hey-api/client-fetch";
+import { type FirebaseApp } from "firebase/app";
 import { createMissionsClient } from "./api.js";
 import { type UserInfo } from "./client/types.gen.js";
 import { connectMissionsFirebase, defaultFirebaseAdapter } from "./firebase.js";
@@ -19,9 +20,13 @@ export type Missions = {
   readonly manager: MissionsManager;
 };
 
+export type MissionsWithFirebase = Missions & {
+  readonly firebase: FirebaseApp;
+};
+
 export async function connectMissions(
   options: ConnectMissionsOptions
-): Promise<Missions> {
+): Promise<MissionsWithFirebase> {
   const { apiKey, baseUrl, userAgent, firebaseAppName, logger } = options;
 
   const client = createMissionsClient({
@@ -41,5 +46,5 @@ export async function connectMissions(
     logger,
   });
 
-  return { client, user, manager };
+  return { client, user, manager, firebase };
 }
