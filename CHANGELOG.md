@@ -1,5 +1,12 @@
 # @rescuetablet/missions-client
 
+## 0.1.6
+
+### Patch Changes
+
+- 4008b4a: Replace tsup with tsc
+- 38ee6ff: Update Missions API
+
 ## 0.1.5
 
 ### Patch Changes
