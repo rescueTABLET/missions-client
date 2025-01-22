@@ -2,20 +2,18 @@ import { defineConfig, type Options } from "tsup";
 
 const common: Options = {
   format: ["esm"],
-  dts: true,
+  dts: false,
   clean: true,
-  sourcemap: true,
+  bundle: false,
 };
 
 export default defineConfig([
   {
     entry: ["./src/!(index).ts", "./src/*/!(index).ts?(x)"],
     ...common,
-    bundle: false,
   },
   {
     entry: ["src/index.ts", "src/*/index.ts"],
     ...common,
-    bundle: false,
   },
 ]);

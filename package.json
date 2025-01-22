@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsc",
     "generate": "openapi-ts"
   },
   "peerDependencies": {
@@ -37,7 +37,6 @@
     "@hey-api/openapi-ts": "^0.62.1",
     "@types/react": "^19.0.7",
     "prettier": "^3.4.2",
-    "tsup": "^8.3.5",
     "typescript": "^5.7.3"
   },
   "volta": {
