@@ -14,12 +14,12 @@ export function useMissions(): Record<string, ManagedMission> {
     const addedListener: MissionsManagerEventListener<"mission_added"> = (
       mission
     ) => setMissions((ms) => ({ ...ms, [mission.id]: mission }));
-    manager.addEventListener("mission_added", addedListener);
+    manager.on("mission_added", addedListener);
 
     const updatedListener: MissionsManagerEventListener<"mission_updated"> = (
       mission
     ) => setMissions((ms) => ({ ...ms, [mission.id]: mission }));
-    manager.addEventListener("mission_updated", updatedListener);
+    manager.on("mission_updated", updatedListener);
 
     const removedListener: MissionsManagerEventListener<"mission_removed"> = ({
       id,
@@ -27,12 +27,12 @@ export function useMissions(): Record<string, ManagedMission> {
       setMissions((ms) =>
         Object.fromEntries(Object.entries(ms).filter(([key]) => key !== id))
       );
-    manager.addEventListener("mission_removed", removedListener);
+    manager.on("mission_removed", removedListener);
 
     return () => {
-      manager.removeEventListener("mission_added", addedListener);
-      manager.removeEventListener("mission_updated", updatedListener);
-      manager.removeEventListener("mission_removed", removedListener);
+      manager.off("mission_added", addedListener);
+      manager.off("mission_updated", updatedListener);
+      manager.off("mission_removed", removedListener);
     };
   }, [manager]);
 

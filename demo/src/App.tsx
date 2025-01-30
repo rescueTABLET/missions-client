@@ -8,14 +8,14 @@ import {
 } from "../../src/react";
 
 export default function App() {
-  const [context, setContext] = useState<Missions>();
+  const [missions, setMissions] = useState<Missions>();
 
-  return context ? (
-    <MissionsContextProvider {...context}>
-      <Main signOut={() => setContext(undefined)} />
+  return missions ? (
+    <MissionsContextProvider missions={missions}>
+      <Main signOut={() => setMissions(undefined)} />
     </MissionsContextProvider>
   ) : (
-    <SignIn setContext={setContext} />
+    <SignIn setMissions={setMissions} />
   );
 }
 
@@ -27,7 +27,7 @@ function Main({ signOut }: { signOut: () => void }) {
     <div className="container py-4">
       <h1 className="display-3">Missions</h1>
       <div className="mb-2 d-flex justify-content-between align-items-baseline">
-        <span>{user.displayName ?? user.email ?? user.id}</span>
+        <span>{user.id}</span>
         <button onClick={signOut} className="btn btn-sm btn-outline-primary">
           sign out
         </button>
@@ -66,7 +66,11 @@ function MissionItem({ mission }: { mission: ManagedMission }) {
   );
 }
 
-function SignIn({ setContext }: { setContext: (context?: Missions) => void }) {
+function SignIn({
+  setMissions,
+}: {
+  setMissions: (context?: Missions) => void;
+}) {
   const [apiKey, setApiKey] = useState("");
   const [error, submitAction, pending] = useActionState<
     Error | undefined,
@@ -79,11 +83,11 @@ function SignIn({ setContext }: { setContext: (context?: Missions) => void }) {
       }
 
       const context = await connectMissions({ apiKey });
-      setContext(context);
+      setMissions(context);
 
       return undefined;
     } catch (error: any) {
-      setContext();
+      setMissions(undefined);
       return error;
     }
   }, undefined);

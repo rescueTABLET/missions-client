@@ -9,10 +9,7 @@ export class EventEmitter<EventMap extends Record<string, unknown>> {
     Set<EventListener<EventMap, any>>
   >();
 
-  addEventListener<T extends keyof EventMap>(
-    type: T,
-    listener: EventListener<EventMap, T>
-  ) {
+  on<T extends keyof EventMap>(type: T, listener: EventListener<EventMap, T>) {
     let listeners = this.#listeners.get(type);
     if (!listeners) {
       listeners = new Set<EventListener<EventMap, any>>();
@@ -21,10 +18,7 @@ export class EventEmitter<EventMap extends Record<string, unknown>> {
     listeners.add(listener);
   }
 
-  removeEventListener<T extends keyof EventMap>(
-    type: T,
-    listener: EventListener<EventMap, T>
-  ) {
+  off<T extends keyof EventMap>(type: T, listener: EventListener<EventMap, T>) {
     let listeners = this.#listeners.get(type);
     if (listeners) listeners.delete(listener);
   }
@@ -41,7 +35,7 @@ export class EventEmitter<EventMap extends Record<string, unknown>> {
   protected close() {
     for (const [type, listeners] of this.#listeners.entries()) {
       for (const listener of listeners) {
-        this.removeEventListener(type, listener);
+        this.off(type, listener);
       }
     }
 
