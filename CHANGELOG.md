@@ -1,5 +1,12 @@
 # @rescuetablet/missions-client
 
+## 0.1.7
+
+### Patch Changes
+
+- 236a74f: Change event listener methods from addEventListener to on/off
+- dff6b10: Patients now have coordinates
+
 ## 0.1.6
 
 ### Patch Changes
