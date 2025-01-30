@@ -699,6 +699,7 @@ export type PatientData = {
   patientAssignmentCode?: string;
   treatmentRefused?: boolean;
   resourceIds?: Array<string>;
+  coordinates?: Coordinates;
 } & SectionsRef &
   Tagged;
 
