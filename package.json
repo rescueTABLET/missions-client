@@ -44,9 +44,9 @@
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.0",
-    "@changesets/cli": "^2.27.11",
-    "@hey-api/openapi-ts": "^0.62.1",
-    "@types/react": "^19.0.7",
+    "@changesets/cli": "^2.27.12",
+    "@hey-api/openapi-ts": "^0.63.2",
+    "@types/react": "^18.3.18",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3"
   },
