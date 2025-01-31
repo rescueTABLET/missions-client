@@ -1,5 +1,12 @@
 # @rescuetablet/missions-client
 
+## 0.1.8
+
+### Patch Changes
+
+- 1adc034: Patient: new field externalId
+- 52f4c37: Update @hey-api/openapi-ts
+
 ## 0.1.7
 
 ### Patch Changes
