@@ -674,6 +674,7 @@ export type Patient = Identifiable & Timestamps & PatientData;
 
 export type PatientData = {
   identifier?: string;
+  externalId?: string;
   name?: string;
   injuries?: string;
   triageCategory?: PatientTriageCategory;
