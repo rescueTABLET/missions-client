@@ -45,8 +45,8 @@
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.27.12",
-    "@hey-api/client-fetch": "^0.7.3",
-    "@hey-api/openapi-ts": "^0.63.2",
+    "@hey-api/client-fetch": "^0.8.0",
+    "@hey-api/openapi-ts": "^0.64.1",
     "@types/react": "^18.3.18",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3"

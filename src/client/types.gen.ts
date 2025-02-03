@@ -69,6 +69,10 @@ export type OptionalMissionData = {
    * The name of the person recording the incident proceedings.
    */
   recorder?: string;
+  /**
+   * The main radio channel for the mission.
+   */
+  channel?: string;
   coordinates?: Coordinates;
   /**
    * Number of milliseconds after the last update to this mission when this mission will become a candidate for automatic closing.
@@ -2338,6 +2342,7 @@ export type GetPutMissionData = {
     info?: string;
     commander?: string;
     recorder?: string;
+    channel?: string;
     /**
      * Coordinates in the format `lat,lon`
      */
@@ -2431,3 +2436,10 @@ export type GetTranslationsResponses = {
 
 export type GetTranslationsResponse =
   GetTranslationsResponses[keyof GetTranslationsResponses];
+
+export type ClientOptions = {
+  baseUrl:
+    | "https://missions-api.rescuetablet.com/"
+    | "https://missions-api-dev.rescuetablet.com/"
+    | (string & {});
+};
