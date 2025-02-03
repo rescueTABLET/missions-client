@@ -1,5 +1,13 @@
 # @rescuetablet/missions-client
 
+## 0.1.9
+
+### Patch Changes
+
+- 4936e68: Add mission field "channel"
+- 4936e68: Bump @hey-api/client-fetch from 0.7.3 to 0.8.0
+- 4936e68: Bump @hey-api/openapi-ts from 0.63.2 to 0.64.1
+
 ## 0.1.8
 
 ### Patch Changes
