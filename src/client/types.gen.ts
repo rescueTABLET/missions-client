@@ -48,6 +48,10 @@ export type OptionalMissionData = {
   message?: string;
   keyword?: string;
   /**
+   * An arbitrary scale of priorities.
+   */
+  priority?: number;
+  /**
    * Should this mission be editable by clients?
    */
   editable?: boolean;
