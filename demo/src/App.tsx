@@ -4,7 +4,7 @@ import { connectMissions, type ManagedMission, type Missions } from "../../src";
 import {
   MissionsContextProvider,
   useMissions,
-  useMissionsContext,
+  useMissionsUser,
 } from "../../src/react";
 
 export default function App() {
@@ -20,24 +20,41 @@ export default function App() {
 }
 
 function Main({ signOut }: { signOut: () => void }) {
-  const { user } = useMissionsContext();
-  const missions = useMissions();
-
   return (
     <div className="container py-4">
       <h1 className="display-3">Missions</h1>
       <div className="mb-2 d-flex justify-content-between align-items-baseline">
-        <span>{user.id}</span>
+        <User />
         <button onClick={signOut} className="btn btn-sm btn-outline-primary">
           sign out
         </button>
       </div>
-      <ul className="list-group">
-        {Object.values(missions).map((mission) => (
+      <Missions />
+    </div>
+  );
+}
+
+function User() {
+  const user = useMissionsUser();
+
+  return user ? (
+    <span>
+      {[user.displayName, user.email, user.id].filter(Boolean).join(" / ")}
+    </span>
+  ) : null;
+}
+
+function Missions() {
+  const missions = useMissions();
+
+  return (
+    <ul className="list-group">
+      {Object.values(missions)
+        .toSorted((a, b) => a.id.localeCompare(b.id))
+        .map((mission) => (
           <MissionItem key={mission.id} mission={mission} />
         ))}
-      </ul>
-    </div>
+    </ul>
   );
 }
 

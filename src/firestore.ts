@@ -60,4 +60,11 @@ function mapToArray<T extends Identifiable>(
 
 export type FirestoreUser = {
   missions: Record<string, boolean>;
+  email?: string;
+  displayName?: string;
+  defaultMissionGroups?: ReadonlyArray<string>;
+  roles?: ReadonlyArray<string>;
+  groups: Record<string, boolean>;
+  groupPermissions: Record<string, Record<string, boolean>>;
+  permissions: Record<string, boolean>;
 };

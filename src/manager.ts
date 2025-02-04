@@ -10,6 +10,7 @@ import type {
   IFirebase,
   ManagedMission,
   MissionsManagerEventTypes,
+  MissionsUser,
   RemoteMission,
 } from "./types.js";
 
@@ -23,6 +24,7 @@ export type MissionsManagerOptions = {
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   readonly missions = new Map<string, ManagedMission>();
+  user?: MissionsUser;
 
   readonly #userId: string;
   readonly #firebase: IFirebase;
@@ -45,7 +47,11 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
       `users/${this.#userId}`,
       (snapshot) => {
         if (snapshot.data) {
-          const missionIds = Object.keys(snapshot.data.missions ?? {});
+          const user = this.#toUser(snapshot.data);
+          this.user = user;
+          this.emit("user_updated", { user });
+
+          const missionIds = Object.keys(snapshot.data.missions);
           this.#logger?.verbose(
             `Updated mission IDs for user ${this.#userId}: ${missionIds.join(", ")}`
           );
@@ -55,6 +61,25 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
     );
 
     this.#subscriptions.set("$user", { unsubscribe });
+  }
+
+  #toUser(data: FirestoreUser): MissionsUser {
+    return {
+      id: this.#userId,
+      email: data.email,
+      displayName: data.displayName,
+      defaultMissionGroups: data.defaultMissionGroups ?? [],
+      roles: data.roles ?? [],
+      permissions: Object.entries(data.permissions ?? {})
+        .filter(([, value]) => value)
+        .map(([key]) => key),
+      groups: Object.entries(data.groupPermissions ?? {}).flatMap(
+        ([groupId, group]) =>
+          Object.entries(group)
+            .filter(([, value]) => value)
+            .map(([permission]) => ({ groupId, permission }))
+      ),
+    };
   }
 
   #setMissionIds(missionIds: ReadonlyArray<string>) {
