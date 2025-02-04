@@ -1,5 +1,15 @@
 # @rescuetablet/missions-client
 
+## 0.2.0
+
+### Minor Changes
+
+- 1161e06: Load user updates from Firebase
+
+### Patch Changes
+
+- 09f02f7: Neues Feld: "priority"
+
 ## 0.1.9
 
 ### Patch Changes
