@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.2.2
+
+### Patch Changes
+
+- 3ba8f84: Fix relative imports of JS files
+
 ## 0.2.1
 
 ### Patch Changes
