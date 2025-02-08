@@ -32,8 +32,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "generate": "openapi-ts && tsx scripts/post-process-client.ts"
+    "build": "tsc && tsx scripts/post-process-client.ts",
+    "generate": "openapi-ts"
   },
   "peerDependencies": {
     "@hey-api/client-fetch": ">=0.8.1"
