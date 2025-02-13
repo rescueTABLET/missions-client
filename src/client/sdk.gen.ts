@@ -69,6 +69,15 @@ import type {
   CreateMissionPatientData,
   CreateMissionPatientResponse,
   CreateMissionPatientError,
+  RemoveMissionAttendanceData,
+  RemoveMissionAttendanceResponse,
+  RemoveMissionAttendanceError,
+  UpdateMissionAttendanceData,
+  UpdateMissionAttendanceResponse,
+  UpdateMissionAttendanceError,
+  CreateMissionAttendanceData,
+  CreateMissionAttendanceResponse,
+  CreateMissionAttendanceError,
   PostMissionResourceData,
   PostMissionResourceResponse,
   PostMissionResourceError,
@@ -680,6 +689,80 @@ export const createMissionPatient = <ThrowOnError extends boolean = false>(
       },
     ],
     url: "/missions/{missionId}/patients/{patientId}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
+};
+
+/**
+ * Remove a attendance from a mission.
+ */
+export const removeMissionAttendance = <ThrowOnError extends boolean = false>(
+  options: Options<RemoveMissionAttendanceData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    RemoveMissionAttendanceResponse,
+    RemoveMissionAttendanceError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/missions/{missionId}/attendances/{attendanceId}",
+    ...options,
+  });
+};
+
+/**
+ * Update an existing attendance.
+ */
+export const updateMissionAttendance = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateMissionAttendanceData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    UpdateMissionAttendanceResponse,
+    UpdateMissionAttendanceError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/missions/{missionId}/attendances/{attendanceId}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
+};
+
+/**
+ * Register a new attendance for a mission.
+ */
+export const createMissionAttendance = <ThrowOnError extends boolean = false>(
+  options: Options<CreateMissionAttendanceData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).put<
+    CreateMissionAttendanceResponse,
+    CreateMissionAttendanceError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/missions/{missionId}/attendances/{attendanceId}",
     ...options,
     headers: {
       "Content-Type": "application/json",

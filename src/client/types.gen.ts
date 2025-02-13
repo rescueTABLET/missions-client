@@ -101,8 +101,12 @@ export type MissionResources = {
   sections: Array<Section>;
   files: Array<File>;
   patients: Array<Patient>;
+  attendances: Array<Attendance>;
 };
 
+/**
+ * @deprecated
+ */
 export type MissionAggregates = {
   personnel?: Personnel;
 };
@@ -368,6 +372,9 @@ export type PatientCounts = {
   count: number;
 };
 
+/**
+ * @deprecated
+ */
 export type SectionAggregates = {
   personnel?: Personnel;
 };
@@ -516,6 +523,26 @@ export type PatientDeletedEvent = Event & {
   value: PatientData;
 };
 
+export type AttendanceCreatedEvent = Event & {
+  type: "attendance-created";
+  attendanceId: string;
+  value: AttendanceData;
+};
+
+export type AttendanceUpdatedEvent = Event &
+  PropertyChanges & {
+    type: "attendance-updated";
+    attendanceId: string;
+    oldValue: AttendanceData;
+    newValue: AttendanceData;
+  };
+
+export type AttendanceDeletedEvent = Event & {
+  type: "attendance-deleted";
+  attendanceId?: string;
+  value: AttendanceData;
+};
+
 export type FileCreatedEvent = Event & {
   type: "file-created";
   fileId: string;
@@ -577,6 +604,15 @@ export type MissionEvent =
   | ({
       type?: "patient-deleted";
     } & PatientDeletedEvent)
+  | ({
+      type?: "attendance-created";
+    } & AttendanceCreatedEvent)
+  | ({
+      type?: "attendance-updated";
+    } & AttendanceUpdatedEvent)
+  | ({
+      type?: "attendance-deleted";
+    } & AttendanceDeletedEvent)
   | ({
       type?: "file-created";
     } & FileCreatedEvent);
@@ -788,6 +824,30 @@ export type AddMissionToGroupInput =
   | {
       externalId: string;
     };
+
+export type Attendance = Identifiable & Timestamps & AttendanceData;
+
+export type AttendanceData = {
+  name: string;
+  function?: string;
+  status?: string;
+  contact?: string;
+  resourceId?: string;
+  resourceName?: string;
+  startedAt: number;
+  finishedAt?: number;
+};
+
+export type AttendanceUpdate = {
+  name?: string;
+  function?: string;
+  status?: string;
+  contact?: string;
+  resourceId?: string;
+  resourceName?: string;
+  startedAt?: number;
+  finishedAt?: number;
+};
 
 export type PostMissionData = {
   body: PostMissionInput;
@@ -1755,6 +1815,146 @@ export type CreateMissionPatientResponses = {
 
 export type CreateMissionPatientResponse =
   CreateMissionPatientResponses[keyof CreateMissionPatientResponses];
+
+export type RemoveMissionAttendanceData = {
+  body?: never;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+    /**
+     * The ID of the attendance
+     */
+    attendanceId: Id;
+  };
+  query?: never;
+  url: "/missions/{missionId}/attendances/{attendanceId}";
+};
+
+export type RemoveMissionAttendanceErrors = {
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: _Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: _Error;
+  /**
+   * The object was not found.
+   */
+  404: _Error;
+};
+
+export type RemoveMissionAttendanceError =
+  RemoveMissionAttendanceErrors[keyof RemoveMissionAttendanceErrors];
+
+export type RemoveMissionAttendanceResponses = {
+  /**
+   * The attendance was successfully removed from the mission.
+   */
+  200: Mission;
+};
+
+export type RemoveMissionAttendanceResponse =
+  RemoveMissionAttendanceResponses[keyof RemoveMissionAttendanceResponses];
+
+export type UpdateMissionAttendanceData = {
+  body: AttendanceUpdate;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+    /**
+     * The ID of the attendance
+     */
+    attendanceId: Id;
+  };
+  query?: never;
+  url: "/missions/{missionId}/attendances/{attendanceId}";
+};
+
+export type UpdateMissionAttendanceErrors = {
+  /**
+   * The input data is invalid.
+   */
+  400: _Error;
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: _Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: _Error;
+  /**
+   * The object was not found.
+   */
+  404: _Error;
+};
+
+export type UpdateMissionAttendanceError =
+  UpdateMissionAttendanceErrors[keyof UpdateMissionAttendanceErrors];
+
+export type UpdateMissionAttendanceResponses = {
+  /**
+   * The attendance was successfully updated.
+   */
+  200: Mission;
+};
+
+export type UpdateMissionAttendanceResponse =
+  UpdateMissionAttendanceResponses[keyof UpdateMissionAttendanceResponses];
+
+export type CreateMissionAttendanceData = {
+  body: AttendanceData;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+    /**
+     * The ID of the attendance
+     */
+    attendanceId: Id;
+  };
+  query?: never;
+  url: "/missions/{missionId}/attendances/{attendanceId}";
+};
+
+export type CreateMissionAttendanceErrors = {
+  /**
+   * The input data is invalid.
+   */
+  400: _Error;
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: _Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: _Error;
+  /**
+   * The object was not found.
+   */
+  404: _Error;
+};
+
+export type CreateMissionAttendanceError =
+  CreateMissionAttendanceErrors[keyof CreateMissionAttendanceErrors];
+
+export type CreateMissionAttendanceResponses = {
+  /**
+   * The attendance was successfully added to the mission.
+   */
+  200: Mission;
+};
+
+export type CreateMissionAttendanceResponse =
+  CreateMissionAttendanceResponses[keyof CreateMissionAttendanceResponses];
 
 export type PostMissionResourceData = {
   body: UpdateResourceInput;
