@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.3.0
+
+### Minor Changes
+
+- dcc0cce: Add attendances
+
 ## 0.2.2
 
 ### Patch Changes
