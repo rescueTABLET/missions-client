@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.4.0
+
+### Minor Changes
+
+- 2f4dc5b: Simplify user structure
+
 ## 0.3.0
 
 ### Minor Changes
