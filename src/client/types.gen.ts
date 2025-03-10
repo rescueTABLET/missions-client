@@ -652,13 +652,11 @@ export type UserData = {
 
 export type UserInfo = {
   id: string;
+  email?: string;
+  displayName?: string;
   roles: Array<string>;
   permissions: Array<string>;
-  /**
-   * Use `groups` instead.
-   * @deprecated
-   */
-  groupPermissions: Array<GroupPermission>;
+  defaultMissionGroups: Array<string>;
   groups: Array<UserMissionGroup>;
 };
 

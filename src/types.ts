@@ -1,9 +1,4 @@
-import type {
-  GroupPermission,
-  Identifiable,
-  Mission,
-  Resource,
-} from "./client/types.gen.js";
+import type { Mission, Resource, UserInfo } from "./client/types.gen.js";
 
 export type RemoteMission = Mission & {
   removedResources?: ReadonlyArray<Resource>;
@@ -15,19 +10,10 @@ export type ManagedMission =
   | { id: string; state: "ready"; mission: RemoteMission }
   | { id: string; state: "error"; error: Error };
 
-export type MissionsUser = Identifiable & {
-  email?: string;
-  displayName?: string;
-  defaultMissionGroups: ReadonlyArray<string>;
-  roles: ReadonlyArray<string>;
-  groups: ReadonlyArray<GroupPermission>;
-  permissions: ReadonlyArray<string>;
-};
-
 export type ManagedMissionAddedEvent = ManagedMission;
 export type ManagedMissionUpdatedEvent = ManagedMission;
 export type ManagedMissionRemovedEvent = { id: string };
-export type UserUpdatedEvent = { user: MissionsUser };
+export type UserUpdatedEvent = { user: UserInfo };
 
 export type MissionsManagerEventTypes = {
   mission_added: ManagedMissionAddedEvent;

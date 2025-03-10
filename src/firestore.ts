@@ -64,7 +64,11 @@ export type FirestoreUser = {
   displayName?: string;
   defaultMissionGroups?: ReadonlyArray<string>;
   roles?: ReadonlyArray<string>;
-  groups: Record<string, boolean>;
+  groups: Record<string, GroupInfo>;
   groupPermissions: Record<string, Record<string, boolean>>;
   permissions: Record<string, boolean>;
+};
+
+export type GroupInfo = {
+  name?: string;
 };

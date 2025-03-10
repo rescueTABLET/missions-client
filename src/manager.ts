@@ -1,3 +1,4 @@
+import { type UserInfo } from "./client/types.gen.js";
 import { EventEmitter } from "./events.js";
 import {
   fromFirestoreMission,
@@ -10,7 +11,6 @@ import type {
   IFirebase,
   ManagedMission,
   MissionsManagerEventTypes,
-  MissionsUser,
   RemoteMission,
 } from "./types.js";
 
@@ -24,7 +24,7 @@ export type MissionsManagerOptions = {
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   readonly missions = new Map<string, ManagedMission>();
-  user?: MissionsUser;
+  user?: UserInfo;
 
   readonly #userId: string;
   readonly #firebase: IFirebase;
@@ -48,6 +48,7 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
       (snapshot) => {
         if (snapshot.data) {
           const user = this.#toUser(snapshot.data);
+          console.log("user:", user);
           this.user = user;
           this.emit("user_updated", { user });
 
@@ -63,21 +64,25 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
     this.#subscriptions.set("$user", { unsubscribe });
   }
 
-  #toUser(data: FirestoreUser): MissionsUser {
+  #toUser(data: FirestoreUser): UserInfo {
     return {
       id: this.#userId,
       email: data.email,
       displayName: data.displayName,
-      defaultMissionGroups: data.defaultMissionGroups ?? [],
-      roles: data.roles ?? [],
+      defaultMissionGroups: [...(data.defaultMissionGroups ?? [])],
+      roles: [...(data.roles ?? [])],
       permissions: Object.entries(data.permissions ?? {})
         .filter(([, value]) => value)
         .map(([key]) => key),
-      groups: Object.entries(data.groupPermissions ?? {}).flatMap(
-        ([groupId, group]) =>
-          Object.entries(group)
+      groups: Object.entries(data.groupPermissions ?? {}).map(
+        ([groupId, group]) => ({
+          groupId,
+          permissions: Object.entries(group)
             .filter(([, value]) => value)
-            .map(([permission]) => ({ groupId, permission }))
+            .map(([key]) => key),
+          defaultGroup: data.defaultMissionGroups?.includes(groupId) ?? false,
+          ...data.groups?.[groupId],
+        })
       ),
     };
   }

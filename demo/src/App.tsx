@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { connectMissions, type ManagedMission, type Missions } from "../../src";
 import {
   MissionsContextProvider,
@@ -88,7 +88,9 @@ function SignIn({
 }: {
   setMissions: (context?: Missions) => void;
 }) {
+  const localStorageKey = "rescuetablet:missions-client:demo:apiKey";
   const [apiKey, setApiKey] = useState("");
+
   const [error, submitAction, pending] = useActionState<
     Error | undefined,
     FormData
@@ -100,14 +102,24 @@ function SignIn({
       }
 
       const context = await connectMissions({ apiKey });
+      localStorage.setItem(localStorageKey, apiKey);
       setMissions(context);
-
       return undefined;
     } catch (error: any) {
       setMissions(undefined);
       return error;
     }
   }, undefined);
+
+  useEffect(() => {
+    const storedApiKey = localStorage.getItem(localStorageKey);
+    if (storedApiKey) {
+      setApiKey(storedApiKey);
+      const form = new FormData();
+      form.set("apiKey", storedApiKey);
+      submitAction(form);
+    }
+  }, [submitAction]);
 
   return (
     <div className="container py-4">
