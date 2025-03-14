@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.5.0
+
+### Minor Changes
+
+- c7e1c01: New mission field 'internalId'
+
 ## 0.4.0
 
 ### Minor Changes
