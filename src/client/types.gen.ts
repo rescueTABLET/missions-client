@@ -43,6 +43,7 @@ export type Tagged = {
 export type OptionalMissionData = {
   groupIds?: Array<string>;
   externalId?: string;
+  internalId?: string;
   shared?: boolean;
   source?: string;
   message?: string;
@@ -622,6 +623,7 @@ export type MissionReport = Identifiable &
   CreationTimestamp & {
     groupIds: Array<string>;
     externalId?: string;
+    internalId?: string;
     keyword?: string;
     message: string;
     privileges?: boolean;
@@ -2528,6 +2530,10 @@ export type GetPutMissionData = {
      */
     externalId: string;
     message: string;
+    /**
+     * An internal ID of the mission in your system.
+     */
+    internalId?: string;
     /**
      * Comma-separated list of group IDs to add the mission to.
      * If left empty, the mission will be created/updated for all group IDs the API key has access to.
