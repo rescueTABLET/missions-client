@@ -79,6 +79,7 @@ export type OptionalMissionData = {
    */
   channel?: string;
   coordinates?: Coordinates;
+  georeferences?: Array<Georeference>;
   /**
    * Number of milliseconds after the last update to this mission when this mission will become a candidate for automatic closing.
    * The actual close of the mission may happen several minutes up to an hour after this time, but will never happen before it.
@@ -86,6 +87,11 @@ export type OptionalMissionData = {
    *
    */
   expiresAfter?: number;
+};
+
+export type Georeference = {
+  type: string;
+  coordinates: Coordinates;
 };
 
 export type RequiredMissionData = {
