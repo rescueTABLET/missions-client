@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.6.0
+
+### Minor Changes
+
+- 251ab6f: New mission field: georeferences
+
 ## 0.5.0
 
 ### Minor Changes
