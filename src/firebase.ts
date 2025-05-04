@@ -1,4 +1,3 @@
-import { type Client } from "@hey-api/client-fetch";
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import {
@@ -9,7 +8,7 @@ import {
   persistentMultipleTabManager,
   type Firestore,
 } from "firebase/firestore";
-import { getFirebaseConfig, getUser } from "./client/sdk.gen.js";
+import { type MissionsApi } from "./api.js";
 import type { UserInfo } from "./client/types.gen.js";
 import type { DocumentSnapshotListener, IFirebase } from "./types.js";
 
@@ -28,17 +27,17 @@ export function defaultFirebaseAdapter(firestore: Firestore): IFirebase {
 }
 
 export async function connectMissionsFirebase({
-  client,
+  api,
   firebaseAppName,
   enableOfflinePersistence,
 }: {
-  client: Client;
+  api: MissionsApi;
   firebaseAppName?: string;
   enableOfflinePersistence?: boolean;
 }): Promise<{ user: UserInfo; firebase: FirebaseApp; firestore: Firestore }> {
   const [user, firebaseConfig] = await Promise.all([
-    getUser({ client, throwOnError: true }).then((r: any) => r.data),
-    getFirebaseConfig({ client, throwOnError: true }).then((r: any) => r.data),
+    api.getUser(),
+    api.getFirebaseConfig(),
   ]);
 
   const firebase = initializeApp(firebaseConfig.config, {

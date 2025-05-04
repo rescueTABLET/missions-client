@@ -1,13 +1,14 @@
 import {
   createContext,
-  type ReactNode,
+  startTransition,
   useActionState,
   useCallback,
   useContext,
   useEffect,
   useState,
+  type ReactNode,
 } from "react";
-import { connectMissions, type Missions } from "../../src";
+import { connectMissions, LocalStorageCache, type Missions } from "../../src";
 import { MissionsContextProvider } from "../../src/react";
 
 type AuthContext = {
@@ -60,6 +61,7 @@ function SignIn({
 
       const context = await connectMissions({
         apiKey,
+        cache: new LocalStorageCache(),
         enableOfflinePersistence: true,
       });
       localStorage.setItem(localStorageKey, apiKey);
@@ -76,9 +78,12 @@ function SignIn({
     const storedApiKey = localStorage.getItem(localStorageKey);
     if (storedApiKey) {
       setApiKey(storedApiKey);
-      const form = new FormData();
-      form.set("apiKey", storedApiKey);
-      submitAction(form);
+
+      startTransition(() => {
+        const form = new FormData();
+        form.set("apiKey", storedApiKey);
+        submitAction(form);
+      });
     }
   }, [submitAction]);
 
@@ -105,7 +110,11 @@ function SignIn({
         {error && (
           <div className="alert alert-danger mb-4">{error.message}</div>
         )}
-        <button type="submit" disabled={pending} className="btn btn-primary">
+        <button
+          type="submit"
+          disabled={pending}
+          className="btn btn-primary d-flex gap-2 items-center"
+        >
           {pending ? (
             <>
               <span

@@ -132,8 +132,8 @@ import type {
   GetUpdateResourceError,
   GetTranslationsData,
   GetTranslationsResponse,
-} from "./types.gen";
-import { client as _heyApiClient } from "./client.gen";
+} from "./types.gen.js";
+import { client as _heyApiClient } from "./client.gen.js";
 
 export type Options<
   TData extends TDataShape = TDataShape,
