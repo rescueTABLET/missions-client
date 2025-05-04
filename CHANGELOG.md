@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.7.0
+
+### Minor Changes
+
+- 672f0f1: Add option to enable offline persistence
+
 ## 0.6.0
 
 ### Minor Changes

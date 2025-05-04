@@ -1,7 +1,7 @@
 {
   "name": "@rescuetablet/missions-client",
   "description": "Client library for the rescueTABLET Missions Service. It allows you to create, update, delete and retrieve missions as well as subscribe to real-time updates.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rescuetablet/missions-client.git"
