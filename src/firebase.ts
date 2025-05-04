@@ -1,18 +1,25 @@
 import { type Client } from "@hey-api/client-fetch";
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
-import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  initializeFirestore,
+  onSnapshot,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from "firebase/firestore";
 import { getFirebaseConfig, getUser } from "./client/sdk.gen.js";
 import type { UserInfo } from "./client/types.gen.js";
 import type { DocumentSnapshotListener, IFirebase } from "./types.js";
 
-export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
+export function defaultFirebaseAdapter(firestore: Firestore): IFirebase {
   return {
     onDocumentSnapshot: async <T>(
       ref: string,
       { next, error }: DocumentSnapshotListener<T>
     ) =>
-      onSnapshot(doc(getFirestore(firebase), ref), {
+      onSnapshot(doc(firestore, ref), {
         next: (snapshot) =>
           next({ id: snapshot.id, data: snapshot.data() as T | undefined }),
         error,
@@ -20,25 +27,34 @@ export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
   };
 }
 
-export async function connectMissionsFirebase(args: {
+export async function connectMissionsFirebase({
+  client,
+  firebaseAppName,
+  enableOfflinePersistence,
+}: {
   client: Client;
   firebaseAppName?: string;
-}): Promise<{ user: UserInfo; firebase: FirebaseApp }> {
+  enableOfflinePersistence?: boolean;
+}): Promise<{ user: UserInfo; firebase: FirebaseApp; firestore: Firestore }> {
   const [user, firebaseConfig] = await Promise.all([
-    getUser({ client: args.client, throwOnError: true }).then(
-      (r: any) => r.data
-    ),
-    getFirebaseConfig({ client: args.client, throwOnError: true }).then(
-      (r: any) => r.data
-    ),
+    getUser({ client, throwOnError: true }).then((r: any) => r.data),
+    getFirebaseConfig({ client, throwOnError: true }).then((r: any) => r.data),
   ]);
 
   const firebase = initializeApp(firebaseConfig.config, {
-    name: args.firebaseAppName ?? "rescuetablet/missions",
+    name: firebaseAppName ?? "rescuetablet/missions",
     automaticDataCollectionEnabled: false,
+  });
+
+  const firestore = initializeFirestore(firebase, {
+    localCache: enableOfflinePersistence
+      ? persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        })
+      : undefined,
   });
 
   await signInWithCustomToken(getAuth(firebase), firebaseConfig.token);
 
-  return { user, firebase };
+  return { user, firebase, firestore };
 }

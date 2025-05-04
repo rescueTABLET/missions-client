@@ -1,25 +1,19 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { useActionState, useEffect, useState } from "react";
-import { connectMissions, type ManagedMission, type Missions } from "../../src";
-import {
-  MissionsContextProvider,
-  useMissions,
-  useMissionsUser,
-} from "../../src/react";
+import { type ManagedMission, type Missions } from "../../src";
+import { useMissions, useMissionsUser } from "../../src/react";
+import AuthProvider, { useSignOut } from "./auth";
 
 export default function App() {
-  const [missions, setMissions] = useState<Missions>();
-
-  return missions ? (
-    <MissionsContextProvider missions={missions}>
-      <Main signOut={() => setMissions(undefined)} />
-    </MissionsContextProvider>
-  ) : (
-    <SignIn setMissions={setMissions} />
+  return (
+    <AuthProvider>
+      <Main />
+    </AuthProvider>
   );
 }
 
-function Main({ signOut }: { signOut: () => void }) {
+function Main() {
+  const signOut = useSignOut();
+
   return (
     <div className="container py-4">
       <h1 className="display-3">Missions</h1>
@@ -80,84 +74,5 @@ function MissionItem({ mission }: { mission: ManagedMission }) {
         </span>
       )}
     </li>
-  );
-}
-
-function SignIn({
-  setMissions,
-}: {
-  setMissions: (context?: Missions) => void;
-}) {
-  const localStorageKey = "rescuetablet:missions-client:demo:apiKey";
-  const [apiKey, setApiKey] = useState("");
-
-  const [error, submitAction, pending] = useActionState<
-    Error | undefined,
-    FormData
-  >(async (_, form) => {
-    try {
-      const apiKey = form.get("apiKey");
-      if (typeof apiKey !== "string") {
-        throw new Error("No API key provided");
-      }
-
-      const context = await connectMissions({ apiKey });
-      localStorage.setItem(localStorageKey, apiKey);
-      setMissions(context);
-      return undefined;
-    } catch (error: any) {
-      setMissions(undefined);
-      return error;
-    }
-  }, undefined);
-
-  useEffect(() => {
-    const storedApiKey = localStorage.getItem(localStorageKey);
-    if (storedApiKey) {
-      setApiKey(storedApiKey);
-      const form = new FormData();
-      form.set("apiKey", storedApiKey);
-      submitAction(form);
-    }
-  }, [submitAction]);
-
-  return (
-    <div className="container py-4">
-      <h1 className="display-3">Sign In</h1>
-      <form action={submitAction}>
-        <div className="mb-4">
-          <label htmlFor="apiKey" className="form-label">
-            API Key
-          </label>
-          <input
-            type="password"
-            id="apiKey"
-            name="apiKey"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            autoComplete="none"
-            required
-            disabled={pending}
-            className="form-control"
-          />
-        </div>
-        {error && (
-          <div className="alert alert-danger mb-4">{error.message}</div>
-        )}
-        <button type="submit" disabled={pending} className="btn btn-primary">
-          {pending ? (
-            <>
-              <span
-                className="spinner-border spinner-border-sm"
-                aria-hidden="true"
-              />
-              <span role="status">Signin in…</span>
-            </>
-          ) : (
-            <>Sign in</>
-          )}
-        </button>
-      </form>
-    </div>
   );
 }

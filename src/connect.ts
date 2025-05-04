@@ -10,6 +10,7 @@ export type ConnectMissionsOptions = {
   baseUrl?: string;
   userAgent?: string;
   firebaseAppName?: string;
+  enableOfflinePersistence?: boolean;
   logger?: Logger;
 };
 
@@ -22,24 +23,28 @@ export type MissionsWithFirebase = Missions & {
   readonly firebase: FirebaseApp;
 };
 
-export async function connectMissions(
-  options: ConnectMissionsOptions
-): Promise<MissionsWithFirebase> {
-  const { apiKey, baseUrl, userAgent, firebaseAppName, logger } = options;
-
+export async function connectMissions({
+  apiKey,
+  baseUrl,
+  userAgent,
+  firebaseAppName,
+  enableOfflinePersistence,
+  logger,
+}: ConnectMissionsOptions): Promise<MissionsWithFirebase> {
   const client = createMissionsClient({
     apiKey,
     baseUrl,
     userAgent,
   });
 
-  const { user, firebase } = await connectMissionsFirebase({
+  const { user, firebase, firestore } = await connectMissionsFirebase({
     client,
     firebaseAppName,
+    enableOfflinePersistence,
   });
 
   const manager = new MissionsManager({
-    firebase: defaultFirebaseAdapter(firebase),
+    firebase: defaultFirebaseAdapter(firestore),
     userId: user.id,
     logger,
   });

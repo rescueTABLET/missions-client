@@ -48,7 +48,6 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
       (snapshot) => {
         if (snapshot.data) {
           const user = this.#toUser(snapshot.data);
-          console.log("user:", user);
           this.user = user;
           this.emit("user_updated", { user });
 
