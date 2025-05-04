@@ -176,13 +176,13 @@ export type ReportPublication = {
 
 export type ReportPublicationStatus =
   | ({
-      status?: "pending";
+      status: "pending";
     } & ReportPublicationStatusPending)
   | ({
-      status?: "success";
+      status: "success";
     } & ReportPublicationStatusSuccess)
   | ({
-      status?: "failed";
+      status: "failed";
     } & ReportPublicationStatusFailed);
 
 export type ReportPublicationStatusPending = {
@@ -326,10 +326,10 @@ export type TaktischesZeichenMapSymbol = {
 
 export type MapSymbol =
   | ({
-      type?: "icon";
+      type: "icon";
     } & IconMapSymbol)
   | ({
-      type?: "tz";
+      type: "tz";
     } & TaktischesZeichenMapSymbol);
 
 export type MapElementBaseData = {
@@ -558,70 +558,70 @@ export type FileCreatedEvent = Event & {
 
 export type MissionEvent =
   | ({
-      type?: "mission-created";
+      type: "mission-created";
     } & MissionCreatedEvent)
   | ({
-      type?: "mission-updated";
+      type: "mission-updated";
     } & MissionUpdatedEvent)
   | ({
-      type?: "mission-closed";
+      type: "mission-closed";
     } & MissionClosedEvent)
   | ({
-      type?: "action-created";
+      type: "action-created";
     } & ActionCreatedEvent)
   | ({
-      type?: "action-updated";
+      type: "action-updated";
     } & ActionUpdatedEvent)
   | ({
-      type?: "action-deleted";
+      type: "action-deleted";
     } & ActionDeletedEvent)
   | ({
-      type?: "report-created";
+      type: "report-created";
     } & ReportCreatedEvent)
   | ({
-      type?: "report-updated";
+      type: "report-updated";
     } & ReportUpdatedEvent)
   | ({
-      type?: "report-deleted";
+      type: "report-deleted";
     } & ReportDeletedEvent)
   | ({
-      type?: "resource-added";
+      type: "resource-added";
     } & ResourceAddedEvent)
   | ({
-      type?: "resource-updated";
+      type: "resource-updated";
     } & ResourceUpdatedEvent)
   | ({
-      type?: "resource-removed";
+      type: "resource-removed";
     } & ResourceRemovedEvent)
   | ({
-      type?: "section-created";
+      type: "section-created";
     } & SectionCreatedEvent)
   | ({
-      type?: "section-updated";
+      type: "section-updated";
     } & SectionUpdatedEvent)
   | ({
-      type?: "section-deleted";
+      type: "section-deleted";
     } & SectionDeletedEvent)
   | ({
-      type?: "patient-created";
+      type: "patient-created";
     } & PatientCreatedEvent)
   | ({
-      type?: "patient-updated";
+      type: "patient-updated";
     } & PatientUpdatedEvent)
   | ({
-      type?: "patient-deleted";
+      type: "patient-deleted";
     } & PatientDeletedEvent)
   | ({
-      type?: "attendance-created";
+      type: "attendance-created";
     } & AttendanceCreatedEvent)
   | ({
-      type?: "attendance-updated";
+      type: "attendance-updated";
     } & AttendanceUpdatedEvent)
   | ({
-      type?: "attendance-deleted";
+      type: "attendance-deleted";
     } & AttendanceDeletedEvent)
   | ({
-      type?: "file-created";
+      type: "file-created";
     } & FileCreatedEvent);
 
 export type MissionReport = Identifiable &
