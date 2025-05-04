@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.8.0
+
+### Minor Changes
+
+- 220600c: Add API cache
+
 ## 0.7.0
 
 ### Minor Changes
