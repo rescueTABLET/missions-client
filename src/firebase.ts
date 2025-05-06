@@ -11,7 +11,6 @@ import {
 } from "firebase/auth";
 import {
   doc,
-  getFirestore,
   initializeFirestore,
   onSnapshot,
   persistentLocalCache,
@@ -23,29 +22,39 @@ import type { UserInfo } from "./client/types.gen.js";
 import { type Logger } from "./log.js";
 import type { DocumentSnapshotListener, IFirebase } from "./types.js";
 
-export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
+export function defaultFirebaseAdapter(
+  firebase: FirebaseApp,
+  enableOfflinePersistence?: boolean
+): IFirebase {
+  const firestore = initializeFirestore(firebase, {
+    localCache: enableOfflinePersistence
+      ? persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        })
+      : undefined,
+  });
+  const auth = getAuth(firebase);
+
   return {
     onDocumentSnapshot: async <T>(
       ref: string,
       { next, error }: DocumentSnapshotListener<T>
     ) =>
-      onSnapshot(doc(getFirestore(firebase), ref), {
+      onSnapshot(doc(firestore, ref), {
         next: (snapshot) =>
           next({ id: snapshot.id, data: snapshot.data() as T | undefined }),
         error,
       }),
 
     onAuthStateChanged: async (listener) =>
-      onAuthStateChanged(getAuth(firebase), (auth) =>
-        listener(auth ?? undefined)
-      ),
+      onAuthStateChanged(auth, (user) => listener(user ?? undefined)),
 
     signInWithCustomToken: async (token) => {
-      await signInWithCustomToken(getAuth(firebase), token);
+      await signInWithCustomToken(auth, token);
     },
 
     signOut: async () => {
-      await signOut(getAuth(firebase));
+      await signOut(auth);
     },
   };
 }
@@ -73,19 +82,7 @@ export async function connectMissionsFirebase({
 
   const firebase = initializeApp(config, settings);
 
-  logger?.info(
-    `Initializing Firestore with offline persistence ${enableOfflinePersistence ? "enabled" : "disabled"}`
-  );
-
-  initializeFirestore(firebase, {
-    localCache: enableOfflinePersistence
-      ? persistentLocalCache({
-          tabManager: persistentMultipleTabManager(),
-        })
-      : undefined,
-  });
-
-  const adapter = defaultFirebaseAdapter(firebase);
+  const adapter = defaultFirebaseAdapter(firebase, enableOfflinePersistence);
 
   await authorizeFirebase({ firebase: adapter, user, token, logger });
 
