@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.9.0
+
+### Minor Changes
+
+- 4fbc2d0: Fix offline authorization
+
 ## 0.8.0
 
 ### Minor Changes
