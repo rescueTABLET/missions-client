@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.10.0
+
+### Minor Changes
+
+- 0ddef96: Introduce Firebase Auth adapter
+
 ## 0.9.0
 
 ### Minor Changes
