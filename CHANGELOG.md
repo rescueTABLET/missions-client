@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.11.0
+
+### Minor Changes
+
+- fc43342: Add Patient events
+
 ## 0.10.1
 
 ### Patch Changes
