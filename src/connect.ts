@@ -1,7 +1,7 @@
 import { type Client } from "@hey-api/client-fetch";
 import { type FirebaseApp } from "firebase/app";
 import { RemoteMissionsApi, type Cache } from "./api.js";
-import { connectMissionsFirebase, defaultFirebaseAdapter } from "./firebase.js";
+import { connectMissionsFirebase } from "./firebase.js";
 import { type Logger } from "./log.js";
 import { MissionsManager } from "./manager.js";
 
@@ -41,7 +41,7 @@ export async function connectMissions({
     logger,
   });
 
-  const { user, firebase, firestore } = await connectMissionsFirebase({
+  const { user, firebase, adapter } = await connectMissionsFirebase({
     api,
     firebaseAppName,
     enableOfflinePersistence,
@@ -49,7 +49,7 @@ export async function connectMissions({
   });
 
   const manager = new MissionsManager({
-    firebase: defaultFirebaseAdapter(firestore),
+    firebase: adapter,
     userId: user.id,
     logger,
   });

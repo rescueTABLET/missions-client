@@ -38,9 +38,18 @@ export type DocumentSnapshotListener<T> = {
   error: (error: Error) => void;
 };
 
+export type FirebaseUser = { uid: string };
+export type AuthStateChangeListener = (user?: FirebaseUser) => void;
+
 export type IFirebase = {
   onDocumentSnapshot<T>(
     ref: string,
     listener: DocumentSnapshotListener<T>
   ): Promise<Unsubscribe>;
+
+  onAuthStateChanged(listener: AuthStateChangeListener): Promise<Unsubscribe>;
+
+  signInWithCustomToken(token: string): Promise<void>;
+
+  signOut(): Promise<void>;
 };

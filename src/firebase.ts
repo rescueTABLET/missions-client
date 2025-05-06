@@ -8,33 +8,45 @@ import {
   onAuthStateChanged,
   signInWithCustomToken,
   signOut,
-  type Auth,
-  type User,
 } from "firebase/auth";
 import {
   doc,
+  getFirestore,
   initializeFirestore,
   onSnapshot,
   persistentLocalCache,
   persistentMultipleTabManager,
-  type Firestore,
 } from "firebase/firestore";
 import { type MissionsApi } from "./api.js";
+import { authorizeFirebase } from "./auth.js";
 import type { UserInfo } from "./client/types.gen.js";
 import { type Logger } from "./log.js";
 import type { DocumentSnapshotListener, IFirebase } from "./types.js";
 
-export function defaultFirebaseAdapter(firestore: Firestore): IFirebase {
+export function defaultFirebaseAdapter(firebase: FirebaseApp): IFirebase {
   return {
     onDocumentSnapshot: async <T>(
       ref: string,
       { next, error }: DocumentSnapshotListener<T>
     ) =>
-      onSnapshot(doc(firestore, ref), {
+      onSnapshot(doc(getFirestore(firebase), ref), {
         next: (snapshot) =>
           next({ id: snapshot.id, data: snapshot.data() as T | undefined }),
         error,
       }),
+
+    onAuthStateChanged: async (listener) =>
+      onAuthStateChanged(getAuth(firebase), (auth) =>
+        listener(auth ?? undefined)
+      ),
+
+    signInWithCustomToken: async (token) => {
+      await signInWithCustomToken(getAuth(firebase), token);
+    },
+
+    signOut: async () => {
+      await signOut(getAuth(firebase));
+    },
   };
 }
 
@@ -48,7 +60,7 @@ export async function connectMissionsFirebase({
   firebaseAppName?: string;
   enableOfflinePersistence?: boolean;
   logger?: Logger;
-}): Promise<{ user: UserInfo; firebase: FirebaseApp; firestore: Firestore }> {
+}): Promise<{ user: UserInfo; firebase: FirebaseApp; adapter: IFirebase }> {
   const [user, { config, token }] = await Promise.all([
     api.getUser(),
     api.getFirebaseConfig(),
@@ -65,7 +77,7 @@ export async function connectMissionsFirebase({
     `Initializing Firestore with offline persistence ${enableOfflinePersistence ? "enabled" : "disabled"}`
   );
 
-  const firestore = initializeFirestore(firebase, {
+  initializeFirestore(firebase, {
     localCache: enableOfflinePersistence
       ? persistentLocalCache({
           tabManager: persistentMultipleTabManager(),
@@ -73,51 +85,9 @@ export async function connectMissionsFirebase({
       : undefined,
   });
 
-  await authorizeFirebase({ firebase, user, token, logger });
+  const adapter = defaultFirebaseAdapter(firebase);
 
-  return { user, firebase, firestore };
-}
+  await authorizeFirebase({ firebase: adapter, user, token, logger });
 
-async function authorizeFirebase({
-  firebase,
-  user,
-  token,
-  logger,
-}: {
-  firebase: FirebaseApp;
-  user: UserInfo;
-  token: string;
-  logger?: Logger;
-}) {
-  const auth = getAuth(firebase);
-  let authorization = await getFirebaseAuthorization(auth);
-
-  if (authorization && authorization.uid !== user.id) {
-    logger?.info(`Signing out previous Firebase user ${authorization.uid}…`);
-    authorization = undefined;
-    await signOut(auth);
-  }
-
-  if (!authorization) {
-    logger?.info("Authorizing Firebase…");
-    await signInWithCustomToken(auth, token);
-  } else {
-    logger?.info("Firebase is already authorized.");
-  }
-}
-
-async function getFirebaseAuthorization(auth: Auth): Promise<User | undefined> {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(auth, {
-      next: (auth) => {
-        unsubscribe();
-        resolve(auth ?? undefined);
-      },
-      error: (error) => {
-        unsubscribe();
-        reject(error);
-      },
-      complete: () => {},
-    });
-  });
+  return { user, firebase, adapter };
 }
