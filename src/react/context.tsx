@@ -9,7 +9,7 @@ export function MissionsContextProvider({
   children,
   missions,
 }: MissionsContextProps) {
-  return <Context.Provider value={missions}>{children}</Context.Provider>;
+  return <Context value={missions}>{children}</Context>;
 }
 
 export function useMissionsContext(): Missions {

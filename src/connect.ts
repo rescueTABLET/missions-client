@@ -45,6 +45,7 @@ export async function connectMissions({
     api,
     firebaseAppName,
     enableOfflinePersistence,
+    logger,
   });
 
   const manager = new MissionsManager({

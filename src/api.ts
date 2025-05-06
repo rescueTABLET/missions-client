@@ -59,14 +59,12 @@ export class RemoteMissionsApi implements MissionsApi {
   async #loadCached<T>(key: string, loadRemote: () => Promise<T>): Promise<T> {
     try {
       const value = await loadRemote();
-      this.#logger?.info("Loaded %s data from missions API:", key, value);
+      this.#logger?.verbose(`Loaded data from missions API ${key}`);
       this.#cache?.setItem(key, JSON.stringify(value));
       return value;
     } catch (error: unknown) {
       this.#logger?.warn(
-        "Error loading %s data from missions API:",
-        key,
-        error
+        `Error loading data from missions API ${key}: ${error}`
       );
     }
 
@@ -75,17 +73,17 @@ export class RemoteMissionsApi implements MissionsApi {
 
       if (typeof stored === "string") {
         const value = JSON.parse(stored);
-        this.#logger?.info("Returning cached %s value:", key, value);
+        this.#logger?.verbose(`Returning cached value ${key}`);
         return value;
       }
     } catch (error: unknown) {
-      throw new Error(`Error loading cached ${key} value: ${error}`, {
+      throw new Error(`Error loading cached value ${key}: ${error}`, {
         cause: error,
       });
     }
 
     throw new Error(
-      `Could not load %s data from missions API and no value found in cache.`
+      `Could not load data from missions API and no value found in cache. ${key}`
     );
   }
 }
@@ -106,14 +104,11 @@ export class LocalStorageCache implements Cache {
 
   async getItem(key: string): Promise<string | undefined> {
     return (
-      localStorage.getItem(`${this.#localStorageKeyPrefix}:${key}`) ?? undefined
+      localStorage.getItem(`${this.#localStorageKeyPrefix}${key}`) ?? undefined
     );
   }
 
   async setItem(key: string, value: string): Promise<void> {
-    localStorage.setItem(
-      `${this.#localStorageKeyPrefix}:${key}`,
-      JSON.stringify(value)
-    );
+    localStorage.setItem(`${this.#localStorageKeyPrefix}${key}`, value);
   }
 }

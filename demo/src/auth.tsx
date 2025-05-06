@@ -8,7 +8,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { connectMissions, LocalStorageCache, type Missions } from "../../src";
+import {
+  browserLogger,
+  connectMissions,
+  LocalStorageCache,
+  type Missions,
+} from "../../src";
 import { MissionsContextProvider } from "../../src/react";
 
 type AuthContext = {
@@ -28,11 +33,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return missions ? (
-    <Context.Provider value={{ signOut }}>
+    <Context value={{ signOut }}>
       <MissionsContextProvider missions={missions}>
         <>{children}</>
       </MissionsContextProvider>
-    </Context.Provider>
+    </Context>
   ) : (
     <SignIn setMissions={setMissions} />
   );
@@ -63,6 +68,7 @@ function SignIn({
         apiKey,
         cache: new LocalStorageCache(),
         enableOfflinePersistence: true,
+        logger: browserLogger,
       });
       localStorage.setItem(localStorageKey, apiKey);
       setMissions(context);
