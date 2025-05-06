@@ -38,6 +38,15 @@ export type DocumentSnapshotListener<T> = {
   error: (error: Error) => void;
 };
 
+export type CollectionSnapshot<T> = {
+  documents: ReadonlyArray<Required<DocumentSnapshot<T>>>;
+};
+
+export type CollectionSnapshotListener<T> = {
+  next: (snapshot: CollectionSnapshot<T>) => void;
+  error: (error: Error) => void;
+};
+
 export type FirebaseUser = { uid: string };
 export type AuthStateChangeListener = (user?: FirebaseUser) => void;
 
@@ -45,6 +54,11 @@ export type IFirebase = {
   onDocumentSnapshot<T>(
     ref: string,
     listener: DocumentSnapshotListener<T>
+  ): Promise<Unsubscribe>;
+
+  onCollectionSnapshot<T>(
+    ref: string,
+    listener: CollectionSnapshotListener<T>
   ): Promise<Unsubscribe>;
 
   onAuthStateChanged(listener: AuthStateChangeListener): Promise<Unsubscribe>;

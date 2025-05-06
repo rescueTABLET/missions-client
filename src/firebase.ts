@@ -10,6 +10,7 @@ import {
   signOut,
 } from "firebase/auth";
 import {
+  collection,
   doc,
   initializeFirestore,
   onSnapshot,
@@ -20,7 +21,11 @@ import { type MissionsApi } from "./api.js";
 import { authorizeFirebase } from "./auth.js";
 import type { UserInfo } from "./client/types.gen.js";
 import { type Logger } from "./log.js";
-import type { DocumentSnapshotListener, IFirebase } from "./types.js";
+import type {
+  CollectionSnapshotListener,
+  DocumentSnapshotListener,
+  IFirebase,
+} from "./types.js";
 
 export function defaultFirebaseAdapter(
   firebase: FirebaseApp,
@@ -43,6 +48,21 @@ export function defaultFirebaseAdapter(
       onSnapshot(doc(firestore, ref), {
         next: (snapshot) =>
           next({ id: snapshot.id, data: snapshot.data() as T | undefined }),
+        error,
+      }),
+
+    onCollectionSnapshot: async <T>(
+      ref: string,
+      { next, error }: CollectionSnapshotListener<T>
+    ) =>
+      onSnapshot(collection(firestore, ref), {
+        next: (snapshot) =>
+          next({
+            documents: snapshot.docs.map((doc) => ({
+              id: doc.id,
+              data: doc.data() as T,
+            })),
+          }),
         error,
       }),
 

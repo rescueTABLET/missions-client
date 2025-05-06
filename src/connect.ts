@@ -1,9 +1,9 @@
 import { type Client } from "@hey-api/client-fetch";
-import { type FirebaseApp } from "firebase/app";
 import { RemoteMissionsApi, type Cache } from "./api.js";
 import { connectMissionsFirebase } from "./firebase.js";
 import { type Logger } from "./log.js";
 import { MissionsManager } from "./manager.js";
+import type { IFirebase } from "./types.js";
 
 export type ConnectMissionsOptions = {
   apiKey: string;
@@ -17,11 +17,8 @@ export type ConnectMissionsOptions = {
 
 export type Missions = {
   readonly client: Client;
+  readonly firebase: IFirebase;
   readonly manager: MissionsManager;
-};
-
-export type MissionsWithFirebase = Missions & {
-  readonly firebase: FirebaseApp;
 };
 
 export async function connectMissions({
@@ -32,7 +29,7 @@ export async function connectMissions({
   firebaseAppName,
   enableOfflinePersistence,
   logger,
-}: ConnectMissionsOptions): Promise<MissionsWithFirebase> {
+}: ConnectMissionsOptions): Promise<Missions> {
   const api = new RemoteMissionsApi({
     apiKey,
     baseUrl,
@@ -54,5 +51,5 @@ export async function connectMissions({
     logger,
   });
 
-  return { client: api.client, manager, firebase };
+  return { client: api.client, manager, firebase: adapter };
 }
