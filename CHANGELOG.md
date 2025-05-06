@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.10.1
+
+### Patch Changes
+
+- 08f4b6b: Export auth
+
 ## 0.10.0
 
 ### Minor Changes
