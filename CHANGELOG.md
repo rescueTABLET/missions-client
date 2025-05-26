@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.12.0
+
+### Minor Changes
+
+- 04a063b: Add disconnect()
+
 ## 0.11.0
 
 ### Minor Changes
