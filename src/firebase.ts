@@ -101,7 +101,6 @@ export async function connectMissionsFirebase({
   };
 
   const firebase = initializeApp(config, settings);
-
   const adapter = defaultFirebaseAdapter(firebase, enableOfflinePersistence);
 
   await authorizeFirebase({ firebase: adapter, user, token, logger });

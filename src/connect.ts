@@ -1,4 +1,5 @@
 import { type Client } from "@hey-api/client-fetch";
+import { deleteApp } from "firebase/app";
 import { RemoteMissionsApi, type Cache } from "./api.js";
 import { connectMissionsFirebase } from "./firebase.js";
 import { type Logger } from "./log.js";
@@ -19,6 +20,7 @@ export type Missions = {
   readonly client: Client;
   readonly firebase: IFirebase;
   readonly manager: MissionsManager;
+  readonly disconnect: () => Promise<void>;
 };
 
 export async function connectMissions({
@@ -51,5 +53,16 @@ export async function connectMissions({
     logger,
   });
 
-  return { client: api.client, manager, firebase: adapter };
+  const disconnect = async () => {
+    logger?.info("Closing Firebase app '%s'…", firebaseAppName);
+    manager.close();
+    await deleteApp(firebase);
+  };
+
+  return {
+    client: api.client,
+    manager,
+    firebase: adapter,
+    disconnect,
+  };
 }

@@ -176,6 +176,8 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
       this.#unsubscribe(missionId);
     }
 
+    this.emit("close", {});
+
     super.close();
   }
 }

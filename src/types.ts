@@ -14,12 +14,14 @@ export type ManagedMissionAddedEvent = ManagedMission;
 export type ManagedMissionUpdatedEvent = ManagedMission;
 export type ManagedMissionRemovedEvent = { id: string };
 export type UserUpdatedEvent = { user: UserInfo };
+export type CloseEvent = {};
 
 export type MissionsManagerEventTypes = {
   mission_added: ManagedMissionAddedEvent;
   mission_updated: ManagedMissionUpdatedEvent;
   mission_removed: ManagedMissionRemovedEvent;
   user_updated: UserUpdatedEvent;
+  close: CloseEvent;
 };
 
 export type MissionsManagerEventListener<

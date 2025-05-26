@@ -27,10 +27,11 @@ const localStorageKey = "rescuetablet:missions-client:demo:apiKey";
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [missions, setMissions] = useState<Missions>();
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
+    await missions?.disconnect();
     setMissions(undefined);
     localStorage.removeItem(localStorageKey);
-  }, []);
+  }, [missions]);
 
   return missions ? (
     <Context value={{ signOut }}>
