@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { type ManagedMission } from "../../src";
+import { createMissionsManager } from "../../src/browser";
 import {
-  createMissionsManager,
   MissionsContextProvider,
   useMissions,
   useMissionsUser,
