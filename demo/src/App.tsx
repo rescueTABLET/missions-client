@@ -1,13 +1,22 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { type ManagedMission, type Missions } from "../../src";
-import { useMissions, useMissionsUser } from "../../src/react";
+import { type ManagedMission } from "../../src";
+import {
+  createMissionsManager,
+  MissionsContextProvider,
+  useMissions,
+  useMissionsUser,
+} from "../../src/react";
 import AuthProvider, { useSignOut } from "./auth";
+
+const manager = createMissionsManager();
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Main />
-    </AuthProvider>
+    <MissionsContextProvider manager={manager}>
+      <AuthProvider>
+        <Main />
+      </AuthProvider>
+    </MissionsContextProvider>
   );
 }
 
@@ -41,7 +50,7 @@ function User() {
 function Missions() {
   const missions = useMissions();
 
-  return (
+  return Object.keys(missions).length ? (
     <ul className="list-group">
       {Object.values(missions)
         .toSorted((a, b) => a.id.localeCompare(b.id))
@@ -49,6 +58,8 @@ function Missions() {
           <MissionItem key={mission.id} mission={mission} />
         ))}
     </ul>
+  ) : (
+    <div className="alert alert-info">No missions</div>
   );
 }
 

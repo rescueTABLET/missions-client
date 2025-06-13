@@ -8,13 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {
-  browserLogger,
-  connectMissions,
-  LocalStorageCache,
-  type Missions,
-} from "../../src";
-import { MissionsContextProvider } from "../../src/react";
+import { useMissionsContext } from "../../src/react";
 
 type AuthContext = {
   signOut: () => void;
@@ -25,22 +19,32 @@ const Context = createContext<AuthContext>({ signOut: () => {} });
 const localStorageKey = "rescuetablet:missions-client:demo:apiKey";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [missions, setMissions] = useState<Missions>();
+  const [authorized, setAuthorized] = useState(false);
+  const { manager } = useMissionsContext();
+
+  const signIn = useCallback(
+    async (apiKey: string) => {
+      try {
+        await manager.authorize(apiKey);
+        setAuthorized(true);
+      } catch (error) {
+        setAuthorized(false);
+        throw error;
+      }
+    },
+    [manager]
+  );
 
   const signOut = useCallback(async () => {
-    await missions?.disconnect();
-    setMissions(undefined);
+    await manager.deauthorize();
+    setAuthorized(false);
     localStorage.removeItem(localStorageKey);
-  }, [missions]);
+  }, [manager]);
 
-  return missions ? (
-    <Context value={{ signOut }}>
-      <MissionsContextProvider missions={missions}>
-        <>{children}</>
-      </MissionsContextProvider>
-    </Context>
+  return authorized ? (
+    <Context value={{ signOut }}>{children}</Context>
   ) : (
-    <SignIn setMissions={setMissions} />
+    <SignIn signIn={signIn} />
   );
 }
 
@@ -48,11 +52,7 @@ export function useSignOut(): () => void {
   return useContext(Context).signOut;
 }
 
-function SignIn({
-  setMissions,
-}: {
-  setMissions: (context?: Missions) => void;
-}) {
+function SignIn({ signIn }: { signIn: (apiKey: string) => Promise<void> }) {
   const [apiKey, setApiKey] = useState("");
 
   const [error, submitAction, pending] = useActionState<
@@ -65,17 +65,10 @@ function SignIn({
         throw new Error("No API key provided");
       }
 
-      const context = await connectMissions({
-        apiKey,
-        cache: new LocalStorageCache(),
-        enableOfflinePersistence: true,
-        logger: browserLogger,
-      });
+      await signIn(apiKey);
       localStorage.setItem(localStorageKey, apiKey);
-      setMissions(context);
       return undefined;
     } catch (error: any) {
-      setMissions(undefined);
       localStorage.removeItem(localStorageKey);
       return error;
     }

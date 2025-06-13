@@ -23,19 +23,43 @@ npm i @rescuetablet/missions-client @hey-api/client-fetch firebase
 
 ## Usage
 
-In a regular Node.js or browser environment, initialize the library like this:
+### Browser
 
 ```typescript
-import { connectMissions } from "@rescuetablet/missions-client";
+import { createMissionsManager } from "@rescuetablet/missions-client/browser";
 
-const context = await connectMissions({ apiKey });
+const manager = await createMissionsManager();
+await manager.authorize(missionsApiKey);
 ```
 
-The created `context` contains three fields:
+### React
 
-- `user`: Information about the authorized user.
-- `client`: A pre-authorized `@hey-api/client-fetch` client. (see below)
-- `manager`: A service that provides real-time updates to missions. (see below)
+```tsx
+import { createMissionsManager } from "@rescuetablet/missions-client/browser";
+import {
+  useMissions,
+  useMissionsUser,
+  MissionsContextProvider,
+} from "@rescuetablet/missions-client/react";
+
+// create the manager as described above
+// const manager = …
+
+export default function App() {
+  return (
+    <MissionsContextProvider manager={manager}>
+      <Main />
+    </MissionsContextProvider>
+  );
+}
+
+function Main() {
+  const missions = useMissions();
+  const user = useMissionsUser();
+
+  return <pre>{JSON.stringify({ missions, user }, null, 2)}</pre>;
+}
+```
 
 ### TypeScript Types
 
@@ -47,7 +71,7 @@ import { type Mission } from "@rescuetablet/missions-client";
 
 ### API Client
 
-We provide a [`@hey-api/client-fetch`](https://heyapi.dev/) implementation to interact with the API. Use the `client` object returned from `connectMissions()` for authenticated requests.
+We provide a [`@hey-api/client-fetch`](https://heyapi.dev/) implementation to interact with the API.
 
 ```typescript
 import { createMission } from "@rescuetablet/missions-client";
@@ -59,7 +83,7 @@ await createMission(
     // more mission data
   },
   {
-    client: context.client,
+    client: manager.client,
     // additional hey-api/client-fetch options
   }
 );
@@ -67,10 +91,10 @@ await createMission(
 
 ### Real-Time Updates
 
-The `manager` object returned from `connectMissions()` provides a way to subscribe to real-time updates. You can listen to changes in missions like this:
+The `manager` object provides a way to subscribe to real-time updates. You can listen to changes in missions like this:
 
 ```typescript
-context.manager.on("mission_added", (mission) => {
+manager.on("mission_added", (mission) => {
   console.log("Mission updated", mission);
 });
 ```

@@ -1,5 +1,10 @@
 import type { Mission, Resource, UserInfo } from "./client/types.gen.js";
 
+export type LoadingState = { state: "loading" };
+export type ReadyState<T> = { state: "ready"; data: T };
+export type ErrorState = { state: "error"; error: Error };
+export type DataState<T> = LoadingState | ReadyState<T> | ErrorState;
+
 export type RemoteMission = Mission & {
   removedResources?: ReadonlyArray<Resource>;
   stale: boolean;
@@ -13,7 +18,7 @@ export type ManagedMission =
 export type ManagedMissionAddedEvent = ManagedMission;
 export type ManagedMissionUpdatedEvent = ManagedMission;
 export type ManagedMissionRemovedEvent = { id: string };
-export type UserUpdatedEvent = { user: UserInfo };
+export type UserUpdatedEvent = { user?: UserInfo };
 export type CloseEvent = {};
 
 export type MissionsManagerEventTypes = {
@@ -65,7 +70,7 @@ export type IFirebase = {
 
   onAuthStateChanged(listener: AuthStateChangeListener): Promise<Unsubscribe>;
 
-  signInWithCustomToken(token: string): Promise<void>;
+  signInWithCustomToken(token: string): Promise<FirebaseUser>;
 
   signOut(): Promise<void>;
 };

@@ -1,18 +1,30 @@
-import { createContext, type PropsWithChildren, useContext } from "react";
-import { type Missions } from "../connect.js";
+import {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+  useMemo,
+} from "react";
+import { type MissionsManager } from "../manager.js";
 
-const Context = createContext<Missions | undefined>(undefined);
+export type MissionsContext = {
+  readonly manager: MissionsManager;
+};
 
-export type MissionsContextProps = PropsWithChildren<{ missions: Missions }>;
+const Context = createContext<MissionsContext | undefined>(undefined);
+
+export type MissionsContextProps = PropsWithChildren<{
+  manager: MissionsManager;
+}>;
 
 export function MissionsContextProvider({
   children,
-  missions,
+  manager,
 }: MissionsContextProps) {
-  return <Context value={missions}>{children}</Context>;
+  const context: MissionsContext = useMemo(() => ({ manager }), [manager]);
+  return <Context value={context}>{children}</Context>;
 }
 
-export function useMissionsContext(): Missions {
+export function useMissionsContext(): MissionsContext {
   const context = useContext(Context);
   if (!context)
     throw new Error("useMissionsContext() requires a MissionsContextProvider");

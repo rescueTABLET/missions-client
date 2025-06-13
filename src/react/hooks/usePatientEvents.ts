@@ -20,10 +20,10 @@ export function usePatientEvents(
   onError?: (error: Error) => void
 ): ReadonlyArray<PatientEvent> {
   const [events, setEvents] = useState<ReadonlyArray<PatientEvent>>([]);
-  const { firebase } = useMissionsContext();
+  const { manager } = useMissionsContext();
 
   useEffect(() => {
-    firebase.onCollectionSnapshot<PatientEventData>(
+    manager.firebase.onCollectionSnapshot<PatientEventData>(
       `missions/${missionId}/patients/${patientId}/events`,
       {
         next: (snapshot) => {

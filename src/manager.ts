@@ -1,4 +1,9 @@
+import { Client } from "@hey-api/client-fetch";
 import { type UserInfo } from "./client/types.gen.js";
+import {
+  ConnectionManager,
+  type ConnectionAuthorizedEvent,
+} from "./connection.js";
 import { EventEmitter } from "./events.js";
 import {
   fromFirestoreMission,
@@ -6,6 +11,7 @@ import {
   type FirestoreUser,
 } from "./firestore.js";
 import { type Logger } from "./log.js";
+import { RemoteMissionsApi, type MissionsApi } from "./missions-api.js";
 import { onSnapshotWithBackoff } from "./onSnapshotWithBackoff.js";
 import type {
   IFirebase,
@@ -14,58 +20,99 @@ import type {
   RemoteMission,
 } from "./types.js";
 
-type Subscription = { unsubscribe(): void };
-
 export type MissionsManagerOptions = {
   firebase: IFirebase;
-  userId: string;
+  missionsApi?: MissionsApi;
   logger?: Logger;
 };
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   readonly missions = new Map<string, ManagedMission>();
-  user?: UserInfo;
-
-  readonly #userId: string;
-  readonly #firebase: IFirebase;
+  readonly #missionsApi: MissionsApi;
+  readonly #connections: ConnectionManager;
   readonly #logger?: Logger;
-  readonly #subscriptions = new Map<string, Subscription>();
+  readonly #subscriptions = new Map<string, () => void>();
+  #userSubscription?: () => void;
+
+  readonly #firebase: IFirebase;
+  get firebase(): IFirebase {
+    return this.#firebase;
+  }
+
+  #user?: UserInfo;
+  get user(): UserInfo | undefined {
+    return this.#user;
+  }
 
   constructor(options: MissionsManagerOptions) {
     super();
-    this.#userId = options.userId;
     this.#firebase = options.firebase;
+    this.#missionsApi = options.missionsApi ?? new RemoteMissionsApi();
     this.#logger = options.logger;
-    this.#connect();
+
+    this.#connections = new ConnectionManager({
+      firebase: this.#firebase,
+      missionsApi: this.#missionsApi,
+      logger: this.#logger,
+    });
+    this.#connections.on("authorized", this.#authorizedListener.bind(this));
+    this.#connections.on("deauthorized", this.#deauthorize.bind(this));
   }
 
-  async #connect() {
-    this.#logger?.info(`Subscribing to user ${this.#userId}…`);
+  get client(): Client {
+    return this.#missionsApi.getClient({
+      apiKey: this.#connections.missionsApiKey,
+    });
+  }
 
-    const unsubscribe = await onSnapshotWithBackoff<FirestoreUser>(
+  async authorize(missionsApiKey: string): Promise<void> {
+    await this.#connections.authorize(missionsApiKey);
+  }
+
+  async deauthorize(): Promise<void> {
+    await this.#connections.deauthorize();
+  }
+
+  async #authorizedListener(event: ConnectionAuthorizedEvent) {
+    await this.#deauthorize();
+
+    const userId = event.user.id;
+    this.#logger?.info(`[manager] Subscribing to user ${userId}…`);
+
+    this.#userSubscription = await onSnapshotWithBackoff<FirestoreUser>(
       this.#firebase,
-      `users/${this.#userId}`,
+      `users/${userId}`,
       (snapshot) => {
         if (snapshot.data) {
-          const user = this.#toUser(snapshot.data);
-          this.user = user;
+          const user = this.#toUser(userId, snapshot.data);
+          this.#user = user;
           this.emit("user_updated", { user });
 
-          const missionIds = Object.keys(snapshot.data.missions);
+          const missionIds = Object.keys(snapshot.data.missions ?? {});
           this.#logger?.verbose(
-            `Updated mission IDs for user ${this.#userId}: ${missionIds.join(", ")}`
+            `[manager] Updated mission IDs for user ${userId} (${missionIds.length}): ${missionIds.join(", ")}`
           );
           this.#setMissionIds(missionIds);
         }
       }
     );
-
-    this.#subscriptions.set("$user", { unsubscribe });
   }
 
-  #toUser(data: FirestoreUser): UserInfo {
+  async #deauthorize() {
+    if (!this.#user && !this.#userSubscription) return;
+
+    this.#logger?.info("[manager] Deauthorizing…");
+
+    this.#user = undefined;
+    this.#userSubscription?.();
+    this.#userSubscription = undefined;
+    this.emit("user_updated", {});
+    this.#setMissionIds([]);
+  }
+
+  #toUser(id: string, data: FirestoreUser): UserInfo {
     return {
-      id: this.#userId,
+      id,
       email: data.email,
       displayName: data.displayName,
       defaultMissionGroups: [...(data.defaultMissionGroups ?? [])],
@@ -93,7 +140,7 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
 
     if (newMissionIds.length) {
       this.#logger?.info(
-        `Subscribing to ${newMissionIds.length} missions: ${newMissionIds.join(", ")}…`
+        `[manager] Subscribing to ${newMissionIds.length} missions: ${newMissionIds.join(", ")}…`
       );
 
       for (const missionId of newMissionIds) {
@@ -107,7 +154,7 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
 
     if (removedMissionIds.length) {
       this.#logger?.info(
-        `Unsubscribing from ${removedMissionIds.length} missions: ${removedMissionIds.join(", ")}…`
+        `[manager] Unsubscribing from ${removedMissionIds.length} missions: ${removedMissionIds.join(", ")}…`
       );
 
       for (const missionId of removedMissionIds) {
@@ -117,7 +164,7 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   }
 
   #subscribe(missionId: string) {
-    this.#logger?.info(`Subscribing to mission ${missionId}…`);
+    this.#logger?.info(`[manager] Subscribing to mission ${missionId}…`);
     this.missions.set(missionId, { id: missionId, state: "loading" });
     this.emit("mission_added", { id: missionId, state: "loading" });
 
@@ -128,7 +175,7 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
         if (snapshot.data) {
           this.#updateMission(missionId, snapshot.data);
         } else {
-          this.#logger?.warn(`Mission not found: ${missionId}`);
+          this.#logger?.warn(`[manager] Mission not found: ${missionId}`);
           this.#unsubscribe(missionId, true);
         }
       },
@@ -138,7 +185,7 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
       }
     )
       .then((unsubscribe) => {
-        this.#subscriptions.set(missionId, { unsubscribe });
+        this.#subscriptions.set(missionId, unsubscribe);
       })
       .catch((error) => {
         this.#unsubscribe(missionId, true);
@@ -160,9 +207,8 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   }
 
   #unsubscribe(missionId: string, skipDelete?: boolean) {
-    this.#logger?.info(`Unsubscribing from mission ${missionId}…`);
-    const subscription = this.#subscriptions.get(missionId);
-    subscription?.unsubscribe();
+    this.#logger?.info(`[manager] Unsubscribing from mission ${missionId}…`);
+    this.#subscriptions.get(missionId)?.();
     this.#subscriptions.delete(missionId);
 
     if (!skipDelete) {
@@ -171,13 +217,14 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
     }
   }
 
-  close() {
-    for (const missionId of this.missions.keys()) {
-      this.#unsubscribe(missionId);
-    }
+  async close() {
+    this.#logger?.info("[manager] Closing…");
+
+    this.#connections.off("authorized", this.#authorizedListener);
+    this.#connections.off("deauthorized", this.#deauthorize);
+    await this.#deauthorize();
 
     this.emit("close", {});
-
     super.close();
   }
 }

@@ -7,131 +7,132 @@ import type {
 } from "@hey-api/client-fetch";
 import type {
   PostMissionData,
-  PostMissionResponse,
-  PostMissionError,
+  PostMissionResponses,
+  PostMissionErrors,
   EndMissionData,
-  EndMissionResponse,
-  EndMissionError,
+  EndMissionResponses,
+  EndMissionErrors,
   GetMissionData,
-  GetMissionResponse,
-  GetMissionError,
+  GetMissionResponses,
+  GetMissionErrors,
   UpdateMissionData,
-  UpdateMissionResponse,
-  UpdateMissionError,
+  UpdateMissionResponses,
+  UpdateMissionErrors,
   CreateMissionData,
-  CreateMissionResponse,
-  CreateMissionError,
+  CreateMissionResponses,
+  CreateMissionErrors,
   CreateMissionActionData,
-  CreateMissionActionResponse,
-  CreateMissionActionError,
+  CreateMissionActionResponses,
+  CreateMissionActionErrors,
   CreateMissionReportData,
-  CreateMissionReportResponse,
-  CreateMissionReportError,
+  CreateMissionReportResponses,
+  CreateMissionReportErrors,
   SetMissionReportPublicationStatusData,
-  SetMissionReportPublicationStatusResponse,
-  SetMissionReportPublicationStatusError,
+  SetMissionReportPublicationStatusResponses,
+  SetMissionReportPublicationStatusErrors,
   GetFileData,
-  GetFileResponse,
-  GetFileError,
+  GetFileResponses,
+  GetFileErrors,
   RequestFileUploadData,
-  RequestFileUploadResponse,
-  RequestFileUploadError,
+  RequestFileUploadResponses,
+  RequestFileUploadErrors,
   RemoveMissionResourceData,
-  RemoveMissionResourceResponse,
-  RemoveMissionResourceError,
+  RemoveMissionResourceResponses,
+  RemoveMissionResourceErrors,
   UpdateMissionResourceData,
-  UpdateMissionResourceResponse,
-  UpdateMissionResourceError,
+  UpdateMissionResourceResponses,
+  UpdateMissionResourceErrors,
   CreateMissionResourceData,
-  CreateMissionResourceResponse,
-  CreateMissionResourceError,
+  CreateMissionResourceResponses,
+  CreateMissionResourceErrors,
   RemoveMissionMapElementData,
-  RemoveMissionMapElementResponse,
-  RemoveMissionMapElementError,
+  RemoveMissionMapElementResponses,
+  RemoveMissionMapElementErrors,
   CreateMissionMapElementData,
-  CreateMissionMapElementResponse,
-  CreateMissionMapElementError,
+  CreateMissionMapElementResponses,
+  CreateMissionMapElementErrors,
   RemoveMissionSectionData,
-  RemoveMissionSectionResponse,
-  RemoveMissionSectionError,
+  RemoveMissionSectionResponses,
+  RemoveMissionSectionErrors,
   UpdateMissionSectionData,
-  UpdateMissionSectionResponse,
-  UpdateMissionSectionError,
+  UpdateMissionSectionResponses,
+  UpdateMissionSectionErrors,
   CreateMissionSectionData,
-  CreateMissionSectionResponse,
-  CreateMissionSectionError,
+  CreateMissionSectionResponses,
+  CreateMissionSectionErrors,
   RemoveMissionPatientData,
-  RemoveMissionPatientResponse,
-  RemoveMissionPatientError,
+  RemoveMissionPatientResponses,
+  RemoveMissionPatientErrors,
   UpdateMissionPatientData,
-  UpdateMissionPatientResponse,
-  UpdateMissionPatientError,
+  UpdateMissionPatientResponses,
+  UpdateMissionPatientErrors,
   CreateMissionPatientData,
-  CreateMissionPatientResponse,
-  CreateMissionPatientError,
+  CreateMissionPatientResponses,
+  CreateMissionPatientErrors,
   RemoveMissionAttendanceData,
-  RemoveMissionAttendanceResponse,
-  RemoveMissionAttendanceError,
+  RemoveMissionAttendanceResponses,
+  RemoveMissionAttendanceErrors,
   UpdateMissionAttendanceData,
-  UpdateMissionAttendanceResponse,
-  UpdateMissionAttendanceError,
+  UpdateMissionAttendanceResponses,
+  UpdateMissionAttendanceErrors,
   CreateMissionAttendanceData,
-  CreateMissionAttendanceResponse,
-  CreateMissionAttendanceError,
+  CreateMissionAttendanceResponses,
+  CreateMissionAttendanceErrors,
   PostMissionResourceData,
-  PostMissionResourceResponse,
-  PostMissionResourceError,
+  PostMissionResourceResponses,
+  PostMissionResourceErrors,
   GetMissionGroupsData,
-  GetMissionGroupsResponse,
+  GetMissionGroupsResponses,
   SetMissionGroupData,
-  SetMissionGroupResponse,
+  SetMissionGroupResponses,
   GetGroupMissionsData,
-  GetGroupMissionsResponse,
+  GetGroupMissionsResponses,
   AddMissionToGroupData,
-  AddMissionToGroupResponse,
+  AddMissionToGroupResponses,
   SearchReportsData,
-  SearchReportsResponse,
-  SearchReportsError,
+  SearchReportsResponses,
+  SearchReportsErrors,
   GetReportData,
-  GetReportResponse,
-  GetReportError,
+  GetReportResponses,
+  GetReportErrors,
   ReopenMissionData,
-  ReopenMissionResponse,
-  ReopenMissionError,
+  ReopenMissionResponses,
+  ReopenMissionErrors,
   GetReportFileData,
-  GetReportFileResponse,
-  GetReportFileError,
+  GetReportFileResponses,
+  GetReportFileErrors,
   GetUserData,
-  GetUserResponse,
-  GetUserError,
+  GetUserResponses,
+  GetUserErrors,
   GetFirebaseConfigData,
-  GetFirebaseConfigResponse,
-  GetFirebaseConfigError,
+  GetFirebaseConfigResponses,
+  GetFirebaseConfigErrors,
   FindUsersData,
-  FindUsersResponse,
-  FindUsersError,
+  FindUsersResponses,
+  FindUsersErrors,
   DeleteUserData,
-  DeleteUserResponse,
-  DeleteUserError,
+  DeleteUserResponses,
+  DeleteUserErrors,
   CreateUserData,
-  CreateUserResponse,
-  CreateUserError,
+  CreateUserResponses,
+  CreateUserErrors,
   GetUserApiKeysData,
-  GetUserApiKeysResponse,
-  GetUserApiKeysError,
+  GetUserApiKeysResponses,
+  GetUserApiKeysErrors,
   CreateUserApiKeyData,
-  CreateUserApiKeyResponse,
-  CreateUserApiKeyError,
+  CreateUserApiKeyResponses,
+  CreateUserApiKeyErrors,
   DeleteUserApiKeyData,
-  DeleteUserApiKeyResponse,
-  DeleteUserApiKeyError,
+  DeleteUserApiKeyResponses,
+  DeleteUserApiKeyErrors,
   GetPutMissionData,
-  GetPutMissionResponse,
-  GetPutMissionError,
+  GetPutMissionResponses,
+  GetPutMissionErrors,
   GetUpdateResourceData,
-  GetUpdateResourceError,
+  GetUpdateResourceResponses,
+  GetUpdateResourceErrors,
   GetTranslationsData,
-  GetTranslationsResponse,
+  GetTranslationsResponses,
 } from "./types.gen.js";
 import { client as _heyApiClient } from "./client.gen.js";
 
@@ -178,8 +179,8 @@ export const postMission = <ThrowOnError extends boolean = false>(
   options: Options<PostMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    PostMissionResponse,
-    PostMissionError,
+    PostMissionResponses,
+    PostMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -192,7 +193,7 @@ export const postMission = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -204,8 +205,8 @@ export const endMission = <ThrowOnError extends boolean = false>(
   options: Options<EndMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    EndMissionResponse,
-    EndMissionError,
+    EndMissionResponses,
+    EndMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -226,8 +227,8 @@ export const getMission = <ThrowOnError extends boolean = false>(
   options: Options<GetMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetMissionResponse,
-    GetMissionError,
+    GetMissionResponses,
+    GetMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -248,8 +249,8 @@ export const updateMission = <ThrowOnError extends boolean = false>(
   options: Options<UpdateMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    UpdateMissionResponse,
-    UpdateMissionError,
+    UpdateMissionResponses,
+    UpdateMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -262,7 +263,7 @@ export const updateMission = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -285,8 +286,8 @@ export const createMission = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionResponse,
-    CreateMissionError,
+    CreateMissionResponses,
+    CreateMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -299,7 +300,7 @@ export const createMission = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -311,8 +312,8 @@ export const createMissionAction = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionActionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionActionResponse,
-    CreateMissionActionError,
+    CreateMissionActionResponses,
+    CreateMissionActionErrors,
     ThrowOnError
   >({
     security: [
@@ -325,7 +326,7 @@ export const createMissionAction = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -337,8 +338,8 @@ export const createMissionReport = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionReportData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionReportResponse,
-    CreateMissionReportError,
+    CreateMissionReportResponses,
+    CreateMissionReportErrors,
     ThrowOnError
   >({
     security: [
@@ -351,7 +352,7 @@ export const createMissionReport = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -365,8 +366,8 @@ export const setMissionReportPublicationStatus = <
   options: Options<SetMissionReportPublicationStatusData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    SetMissionReportPublicationStatusResponse,
-    SetMissionReportPublicationStatusError,
+    SetMissionReportPublicationStatusResponses,
+    SetMissionReportPublicationStatusErrors,
     ThrowOnError
   >({
     security: [
@@ -379,7 +380,7 @@ export const setMissionReportPublicationStatus = <
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -391,8 +392,8 @@ export const getFile = <ThrowOnError extends boolean = false>(
   options: Options<GetFileData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetFileResponse,
-    GetFileError,
+    GetFileResponses,
+    GetFileErrors,
     ThrowOnError
   >({
     security: [
@@ -413,8 +414,8 @@ export const requestFileUpload = <ThrowOnError extends boolean = false>(
   options: Options<RequestFileUploadData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    RequestFileUploadResponse,
-    RequestFileUploadError,
+    RequestFileUploadResponses,
+    RequestFileUploadErrors,
     ThrowOnError
   >({
     security: [
@@ -427,7 +428,7 @@ export const requestFileUpload = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -439,8 +440,8 @@ export const removeMissionResource = <ThrowOnError extends boolean = false>(
   options: Options<RemoveMissionResourceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    RemoveMissionResourceResponse,
-    RemoveMissionResourceError,
+    RemoveMissionResourceResponses,
+    RemoveMissionResourceErrors,
     ThrowOnError
   >({
     security: [
@@ -461,8 +462,8 @@ export const updateMissionResource = <ThrowOnError extends boolean = false>(
   options: Options<UpdateMissionResourceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    UpdateMissionResourceResponse,
-    UpdateMissionResourceError,
+    UpdateMissionResourceResponses,
+    UpdateMissionResourceErrors,
     ThrowOnError
   >({
     security: [
@@ -475,7 +476,7 @@ export const updateMissionResource = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -487,8 +488,8 @@ export const createMissionResource = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionResourceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionResourceResponse,
-    CreateMissionResourceError,
+    CreateMissionResourceResponses,
+    CreateMissionResourceErrors,
     ThrowOnError
   >({
     security: [
@@ -501,7 +502,7 @@ export const createMissionResource = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -513,8 +514,8 @@ export const removeMissionMapElement = <ThrowOnError extends boolean = false>(
   options: Options<RemoveMissionMapElementData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    RemoveMissionMapElementResponse,
-    RemoveMissionMapElementError,
+    RemoveMissionMapElementResponses,
+    RemoveMissionMapElementErrors,
     ThrowOnError
   >({
     security: [
@@ -535,8 +536,8 @@ export const createMissionMapElement = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionMapElementData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionMapElementResponse,
-    CreateMissionMapElementError,
+    CreateMissionMapElementResponses,
+    CreateMissionMapElementErrors,
     ThrowOnError
   >({
     security: [
@@ -549,7 +550,7 @@ export const createMissionMapElement = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -561,8 +562,8 @@ export const removeMissionSection = <ThrowOnError extends boolean = false>(
   options: Options<RemoveMissionSectionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    RemoveMissionSectionResponse,
-    RemoveMissionSectionError,
+    RemoveMissionSectionResponses,
+    RemoveMissionSectionErrors,
     ThrowOnError
   >({
     security: [
@@ -583,8 +584,8 @@ export const updateMissionSection = <ThrowOnError extends boolean = false>(
   options: Options<UpdateMissionSectionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    UpdateMissionSectionResponse,
-    UpdateMissionSectionError,
+    UpdateMissionSectionResponses,
+    UpdateMissionSectionErrors,
     ThrowOnError
   >({
     security: [
@@ -597,7 +598,7 @@ export const updateMissionSection = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -609,8 +610,8 @@ export const createMissionSection = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionSectionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionSectionResponse,
-    CreateMissionSectionError,
+    CreateMissionSectionResponses,
+    CreateMissionSectionErrors,
     ThrowOnError
   >({
     security: [
@@ -623,7 +624,7 @@ export const createMissionSection = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -635,8 +636,8 @@ export const removeMissionPatient = <ThrowOnError extends boolean = false>(
   options: Options<RemoveMissionPatientData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    RemoveMissionPatientResponse,
-    RemoveMissionPatientError,
+    RemoveMissionPatientResponses,
+    RemoveMissionPatientErrors,
     ThrowOnError
   >({
     security: [
@@ -657,8 +658,8 @@ export const updateMissionPatient = <ThrowOnError extends boolean = false>(
   options: Options<UpdateMissionPatientData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    UpdateMissionPatientResponse,
-    UpdateMissionPatientError,
+    UpdateMissionPatientResponses,
+    UpdateMissionPatientErrors,
     ThrowOnError
   >({
     security: [
@@ -671,7 +672,7 @@ export const updateMissionPatient = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -683,8 +684,8 @@ export const createMissionPatient = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionPatientData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionPatientResponse,
-    CreateMissionPatientError,
+    CreateMissionPatientResponses,
+    CreateMissionPatientErrors,
     ThrowOnError
   >({
     security: [
@@ -697,7 +698,7 @@ export const createMissionPatient = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -709,8 +710,8 @@ export const removeMissionAttendance = <ThrowOnError extends boolean = false>(
   options: Options<RemoveMissionAttendanceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    RemoveMissionAttendanceResponse,
-    RemoveMissionAttendanceError,
+    RemoveMissionAttendanceResponses,
+    RemoveMissionAttendanceErrors,
     ThrowOnError
   >({
     security: [
@@ -731,8 +732,8 @@ export const updateMissionAttendance = <ThrowOnError extends boolean = false>(
   options: Options<UpdateMissionAttendanceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    UpdateMissionAttendanceResponse,
-    UpdateMissionAttendanceError,
+    UpdateMissionAttendanceResponses,
+    UpdateMissionAttendanceErrors,
     ThrowOnError
   >({
     security: [
@@ -745,7 +746,7 @@ export const updateMissionAttendance = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -757,8 +758,8 @@ export const createMissionAttendance = <ThrowOnError extends boolean = false>(
   options: Options<CreateMissionAttendanceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateMissionAttendanceResponse,
-    CreateMissionAttendanceError,
+    CreateMissionAttendanceResponses,
+    CreateMissionAttendanceErrors,
     ThrowOnError
   >({
     security: [
@@ -771,7 +772,7 @@ export const createMissionAttendance = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -785,8 +786,8 @@ export const postMissionResource = <ThrowOnError extends boolean = false>(
   options: Options<PostMissionResourceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    PostMissionResourceResponse,
-    PostMissionResourceError,
+    PostMissionResourceResponses,
+    PostMissionResourceErrors,
     ThrowOnError
   >({
     security: [
@@ -799,7 +800,7 @@ export const postMissionResource = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -811,7 +812,7 @@ export const getMissionGroups = <ThrowOnError extends boolean = false>(
   options?: Options<GetMissionGroupsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetMissionGroupsResponse,
+    GetMissionGroupsResponses,
     unknown,
     ThrowOnError
   >({
@@ -833,7 +834,7 @@ export const setMissionGroup = <ThrowOnError extends boolean = false>(
   options: Options<SetMissionGroupData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    SetMissionGroupResponse,
+    SetMissionGroupResponses,
     unknown,
     ThrowOnError
   >({
@@ -847,7 +848,7 @@ export const setMissionGroup = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -859,7 +860,7 @@ export const getGroupMissions = <ThrowOnError extends boolean = false>(
   options: Options<GetGroupMissionsData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetGroupMissionsResponse,
+    GetGroupMissionsResponses,
     unknown,
     ThrowOnError
   >({
@@ -881,7 +882,7 @@ export const addMissionToGroup = <ThrowOnError extends boolean = false>(
   options: Options<AddMissionToGroupData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    AddMissionToGroupResponse,
+    AddMissionToGroupResponses,
     unknown,
     ThrowOnError
   >({
@@ -895,7 +896,7 @@ export const addMissionToGroup = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -907,8 +908,8 @@ export const searchReports = <ThrowOnError extends boolean = false>(
   options?: Options<SearchReportsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    SearchReportsResponse,
-    SearchReportsError,
+    SearchReportsResponses,
+    SearchReportsErrors,
     ThrowOnError
   >({
     security: [
@@ -929,8 +930,8 @@ export const getReport = <ThrowOnError extends boolean = false>(
   options: Options<GetReportData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetReportResponse,
-    GetReportError,
+    GetReportResponses,
+    GetReportErrors,
     ThrowOnError
   >({
     security: [
@@ -951,8 +952,8 @@ export const reopenMission = <ThrowOnError extends boolean = false>(
   options: Options<ReopenMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    ReopenMissionResponse,
-    ReopenMissionError,
+    ReopenMissionResponses,
+    ReopenMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -973,8 +974,8 @@ export const getReportFile = <ThrowOnError extends boolean = false>(
   options: Options<GetReportFileData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetReportFileResponse,
-    GetReportFileError,
+    GetReportFileResponses,
+    GetReportFileErrors,
     ThrowOnError
   >({
     security: [
@@ -995,8 +996,8 @@ export const getUser = <ThrowOnError extends boolean = false>(
   options?: Options<GetUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetUserResponse,
-    GetUserError,
+    GetUserResponses,
+    GetUserErrors,
     ThrowOnError
   >({
     security: [
@@ -1017,8 +1018,8 @@ export const getFirebaseConfig = <ThrowOnError extends boolean = false>(
   options?: Options<GetFirebaseConfigData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetFirebaseConfigResponse,
-    GetFirebaseConfigError,
+    GetFirebaseConfigResponses,
+    GetFirebaseConfigErrors,
     ThrowOnError
   >({
     security: [
@@ -1039,8 +1040,8 @@ export const findUsers = <ThrowOnError extends boolean = false>(
   options?: Options<FindUsersData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    FindUsersResponse,
-    FindUsersError,
+    FindUsersResponses,
+    FindUsersErrors,
     ThrowOnError
   >({
     security: [
@@ -1061,8 +1062,8 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
   options: Options<DeleteUserData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteUserResponse,
-    DeleteUserError,
+    DeleteUserResponses,
+    DeleteUserErrors,
     ThrowOnError
   >({
     security: [
@@ -1083,8 +1084,8 @@ export const createUser = <ThrowOnError extends boolean = false>(
   options: Options<CreateUserData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    CreateUserResponse,
-    CreateUserError,
+    CreateUserResponses,
+    CreateUserErrors,
     ThrowOnError
   >({
     security: [
@@ -1097,7 +1098,7 @@ export const createUser = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -1109,8 +1110,8 @@ export const getUserApiKeys = <ThrowOnError extends boolean = false>(
   options: Options<GetUserApiKeysData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetUserApiKeysResponse,
-    GetUserApiKeysError,
+    GetUserApiKeysResponses,
+    GetUserApiKeysErrors,
     ThrowOnError
   >({
     security: [
@@ -1131,8 +1132,8 @@ export const createUserApiKey = <ThrowOnError extends boolean = false>(
   options: Options<CreateUserApiKeyData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateUserApiKeyResponse,
-    CreateUserApiKeyError,
+    CreateUserApiKeyResponses,
+    CreateUserApiKeyErrors,
     ThrowOnError
   >({
     security: [
@@ -1145,7 +1146,7 @@ export const createUserApiKey = <ThrowOnError extends boolean = false>(
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -1157,8 +1158,8 @@ export const deleteUserApiKey = <ThrowOnError extends boolean = false>(
   options: Options<DeleteUserApiKeyData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteUserApiKeyResponse,
-    DeleteUserApiKeyError,
+    DeleteUserApiKeyResponses,
+    DeleteUserApiKeyErrors,
     ThrowOnError
   >({
     security: [
@@ -1201,8 +1202,8 @@ export const getPutMission = <ThrowOnError extends boolean = false>(
   options: Options<GetPutMissionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetPutMissionResponse,
-    GetPutMissionError,
+    GetPutMissionResponses,
+    GetPutMissionErrors,
     ThrowOnError
   >({
     security: [
@@ -1239,8 +1240,8 @@ export const getUpdateResource = <ThrowOnError extends boolean = false>(
   options: Options<GetUpdateResourceData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    unknown,
-    GetUpdateResourceError,
+    GetUpdateResourceResponses,
+    GetUpdateResourceErrors,
     ThrowOnError
   >({
     security: [
@@ -1262,7 +1263,7 @@ export const getTranslations = <ThrowOnError extends boolean = false>(
   options: Options<GetTranslationsData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetTranslationsResponse,
+    GetTranslationsResponses,
     unknown,
     ThrowOnError
   >({

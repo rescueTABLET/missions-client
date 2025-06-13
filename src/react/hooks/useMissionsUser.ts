@@ -12,7 +12,6 @@ export function useMissionsUser(): UserInfo | undefined {
 
     const listener: MissionsManagerEventListener<"user_updated"> = ({ user }) =>
       setUser(user);
-
     manager.on("user_updated", listener);
 
     return () => {
