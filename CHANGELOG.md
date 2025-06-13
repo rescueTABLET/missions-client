@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.13.0
+
+### Minor Changes
+
+- 93c9380: Completely reimplement authorization and offline persistence
+
 ## 0.12.0
 
 ### Minor Changes
