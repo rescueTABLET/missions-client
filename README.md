@@ -18,7 +18,7 @@ Add the following line to `.npmrc` in your project directory (create the file if
 Install the library and its peer dependencies in your project:
 
 ```bash
-npm i @rescuetablet/missions-client @hey-api/client-fetch firebase
+npm i @rescuetablet/missions-client firebase
 ```
 
 ## Usage

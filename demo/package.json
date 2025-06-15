@@ -8,7 +8,6 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "^0.13.1",
     "bootstrap": "^5.3.6",
     "firebase": "^11.9.1",
     "react": "^19.1.0",
