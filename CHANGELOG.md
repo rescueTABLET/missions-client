@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.14.0
+
+### Minor Changes
+
+- ba3e969: Bump @hey-api/openapi-ts to 0.73.0
+
 ## 0.13.0
 
 ### Minor Changes
