@@ -8,7 +8,10 @@ export type ConnectionEvent = {
   manager: ConnectionManager;
 };
 
-export type ConnectionAuthorizedEvent = ConnectionEvent & Connection;
+export type ConnectionAuthorizedEvent = ConnectionEvent & {
+  missionsApiKey: string;
+  user: UserInfo;
+};
 
 export type ConnectionDeauthorizedEvent = ConnectionEvent;
 
@@ -21,10 +24,6 @@ export type ConnectionManagerOptions = {
   firebase: IFirebase;
   missionsApi: MissionsApi;
   logger?: Logger;
-};
-
-export type Connection = {
-  user: UserInfo;
 };
 
 export class ConnectionManager extends EventEmitter<ConnectionManagerEventTypes> {
@@ -45,7 +44,7 @@ export class ConnectionManager extends EventEmitter<ConnectionManagerEventTypes>
     this.#logger = options.logger;
   }
 
-  async authorize(missionsApiKey: string): Promise<Connection> {
+  async authorize(missionsApiKey: string): Promise<void> {
     if (!this.#firebaseUser) {
       this.#firebaseUser = await this.#getFirebaseAuthorization();
 
@@ -91,8 +90,7 @@ export class ConnectionManager extends EventEmitter<ConnectionManagerEventTypes>
       }
 
       this.#missionsApiKey = missionsApiKey;
-      this.emit("authorized", { manager: this, user });
-      return { user };
+      this.emit("authorized", { manager: this, user, missionsApiKey });
     } catch (error: unknown) {
       this.#logger?.warn(
         `[connection] Error authorizing with Missions API key '${missionsApiKey}':`,

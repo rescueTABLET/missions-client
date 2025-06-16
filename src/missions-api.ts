@@ -8,9 +8,9 @@ export type MissionsApiCallArgs = {
 };
 
 export type MissionsApi = {
-  getClient(args: MissionsApiCallArgs): Client;
-  getUser(args: MissionsApiCallArgs): Promise<UserInfo>;
-  getFirebaseConfig(args: MissionsApiCallArgs): Promise<FirebaseConfig>;
+  getClient(args?: MissionsApiCallArgs): Client;
+  getUser(args?: MissionsApiCallArgs): Promise<UserInfo>;
+  getFirebaseConfig(args?: MissionsApiCallArgs): Promise<FirebaseConfig>;
 };
 
 export type RemoteMissionsApiOptions = {
@@ -36,7 +36,7 @@ export class RemoteMissionsApi implements MissionsApi {
     };
   }
 
-  async getUser(args: MissionsApiCallArgs): Promise<UserInfo> {
+  async getUser(args?: MissionsApiCallArgs): Promise<UserInfo> {
     return this.#loadCached(args, "user", async () => {
       const { data } = await getUser({
         client: this.getClient(args),
@@ -46,7 +46,7 @@ export class RemoteMissionsApi implements MissionsApi {
     });
   }
 
-  async getFirebaseConfig(args: MissionsApiCallArgs): Promise<FirebaseConfig> {
+  async getFirebaseConfig(args?: MissionsApiCallArgs): Promise<FirebaseConfig> {
     return this.#loadCached(args, "firebase-config", async () => {
       const { data } = await getFirebaseConfig({
         client: this.getClient(args),
@@ -56,7 +56,7 @@ export class RemoteMissionsApi implements MissionsApi {
     });
   }
 
-  getClient(args: MissionsApiCallArgs) {
+  getClient(args: MissionsApiCallArgs = {}) {
     return createClient({
       ...this.#clientConfig,
       auth: args.apiKey,
@@ -64,11 +64,11 @@ export class RemoteMissionsApi implements MissionsApi {
   }
 
   async #loadCached<T>(
-    args: MissionsApiCallArgs,
+    args: MissionsApiCallArgs | undefined,
     keySuffix: string,
     loadRemote: () => Promise<T>
   ): Promise<T> {
-    const key = [args.apiKey, keySuffix].join(":");
+    const key = [args?.apiKey ?? "default", keySuffix].join(":");
 
     try {
       const value = await loadRemote();

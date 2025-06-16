@@ -28,6 +28,7 @@ export type MissionsManagerOptions = {
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   readonly missions = new Map<string, ManagedMission>();
+  readonly client: Client;
   readonly #missionsApi: MissionsApi;
   readonly #connections: ConnectionManager;
   readonly #logger?: Logger;
@@ -46,9 +47,10 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
 
   constructor(options: MissionsManagerOptions) {
     super();
+    this.#logger = options.logger;
     this.#firebase = options.firebase;
     this.#missionsApi = options.missionsApi ?? new RemoteMissionsApi();
-    this.#logger = options.logger;
+    this.client = this.#missionsApi.getClient();
 
     this.#connections = new ConnectionManager({
       firebase: this.#firebase,
@@ -57,12 +59,6 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
     });
     this.#connections.on("authorized", this.#authorizedListener.bind(this));
     this.#connections.on("deauthorized", this.#deauthorize.bind(this));
-  }
-
-  get client(): Client {
-    return this.#missionsApi.getClient({
-      apiKey: this.#connections.missionsApiKey,
-    });
   }
 
   async authorize(missionsApiKey: string): Promise<void> {
@@ -75,6 +71,11 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
 
   async #authorizedListener(event: ConnectionAuthorizedEvent) {
     await this.#deauthorize();
+
+    this.client.setConfig({
+      ...this.client.getConfig(),
+      auth: event.missionsApiKey,
+    });
 
     const userId = event.user.id;
     this.#logger?.info(`[manager] Subscribing to user ${userId}…`);
@@ -99,6 +100,11 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   }
 
   async #deauthorize() {
+    this.client.setConfig({
+      ...this.client.getConfig(),
+      auth: undefined,
+    });
+
     if (!this.#user && !this.#userSubscription) return;
 
     this.#logger?.info("[manager] Deauthorizing…");
