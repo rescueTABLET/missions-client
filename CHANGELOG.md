@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.15.0
+
+### Minor Changes
+
+- cc9010e: Export Hey API options getter
+
 ## 0.14.1
 
 ### Patch Changes
