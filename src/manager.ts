@@ -1,4 +1,4 @@
-import { Client } from "@hey-api/client-fetch";
+import { type Config } from "./client/client/types.js";
 import { type UserInfo } from "./client/types.gen.js";
 import {
   ConnectionManager,
@@ -28,7 +28,6 @@ export type MissionsManagerOptions = {
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   readonly missions = new Map<string, ManagedMission>();
-  readonly client: Client;
   readonly #missionsApi: MissionsApi;
   readonly #connections: ConnectionManager;
   readonly #logger?: Logger;
@@ -50,7 +49,6 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
     this.#logger = options.logger;
     this.#firebase = options.firebase;
     this.#missionsApi = options.missionsApi ?? new RemoteMissionsApi();
-    this.client = this.#missionsApi.getClient();
 
     this.#connections = new ConnectionManager({
       firebase: this.#firebase,
@@ -59,6 +57,12 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
     });
     this.#connections.on("authorized", this.#authorizedListener.bind(this));
     this.#connections.on("deauthorized", this.#deauthorize.bind(this));
+  }
+
+  getClientOptions(): Pick<Config, "baseUrl" | "headers" | "auth"> {
+    return this.#missionsApi.getClientOptions({
+      apiKey: this.#connections.missionsApiKey,
+    });
   }
 
   async authorize(missionsApiKey: string): Promise<void> {
@@ -71,11 +75,6 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
 
   async #authorizedListener(event: ConnectionAuthorizedEvent) {
     await this.#deauthorize();
-
-    this.client.setConfig({
-      ...this.client.getConfig(),
-      auth: event.missionsApiKey,
-    });
 
     const userId = event.user.id;
     this.#logger?.info(`[manager] Subscribing to user ${userId}…`);
@@ -100,11 +99,6 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   }
 
   async #deauthorize() {
-    this.client.setConfig({
-      ...this.client.getConfig(),
-      auth: undefined,
-    });
-
     if (!this.#user && !this.#userSubscription) return;
 
     this.#logger?.info("[manager] Deauthorizing…");

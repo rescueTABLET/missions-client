@@ -1,4 +1,4 @@
-import { type Client, type Config, createClient } from "@hey-api/client-fetch";
+import { type Config } from "./client/client/types.js";
 import { getFirebaseConfig, getUser } from "./client/sdk.gen.js";
 import type { FirebaseConfig, UserInfo } from "./client/types.gen.js";
 import { type Logger } from "./log.js";
@@ -8,7 +8,9 @@ export type MissionsApiCallArgs = {
 };
 
 export type MissionsApi = {
-  getClient(args?: MissionsApiCallArgs): Client;
+  getClientOptions(
+    args?: MissionsApiCallArgs
+  ): Pick<Config, "baseUrl" | "headers" | "auth">;
   getUser(args?: MissionsApiCallArgs): Promise<UserInfo>;
   getFirebaseConfig(args?: MissionsApiCallArgs): Promise<FirebaseConfig>;
 };
@@ -23,7 +25,7 @@ export type RemoteMissionsApiOptions = {
 export class RemoteMissionsApi implements MissionsApi {
   readonly #cache?: Cache;
   readonly #logger?: Logger;
-  readonly #clientConfig: Config;
+  readonly #clientConfig: Pick<Config, "baseUrl" | "headers">;
 
   constructor(options: RemoteMissionsApiOptions = {}) {
     this.#cache = options.cache;
@@ -39,7 +41,7 @@ export class RemoteMissionsApi implements MissionsApi {
   async getUser(args?: MissionsApiCallArgs): Promise<UserInfo> {
     return this.#loadCached(args, "user", async () => {
       const { data } = await getUser({
-        client: this.getClient(args),
+        ...this.getClientOptions(args),
         throwOnError: true,
       });
       return data;
@@ -49,18 +51,18 @@ export class RemoteMissionsApi implements MissionsApi {
   async getFirebaseConfig(args?: MissionsApiCallArgs): Promise<FirebaseConfig> {
     return this.#loadCached(args, "firebase-config", async () => {
       const { data } = await getFirebaseConfig({
-        client: this.getClient(args),
+        ...this.getClientOptions(args),
         throwOnError: true,
       });
       return data;
     });
   }
 
-  getClient(args: MissionsApiCallArgs = {}) {
-    return createClient({
+  getClientOptions(args: MissionsApiCallArgs = {}) {
+    return {
       ...this.#clientConfig,
       auth: args.apiKey,
-    });
+    };
   }
 
   async #loadCached<T>(

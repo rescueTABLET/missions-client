@@ -1,4 +1,4 @@
-import { defaultPlugins, defineConfig } from "@hey-api/openapi-ts";
+import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
   input: "https://missions-api.rescuetablet.com/openapi.yaml",
@@ -7,5 +7,4 @@ export default defineConfig({
     clean: true,
     format: "prettier",
   },
-  plugins: [...defaultPlugins, "@hey-api/client-fetch"],
 });

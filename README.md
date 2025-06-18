@@ -71,22 +71,23 @@ import { type Mission } from "@rescuetablet/missions-client";
 
 ### API Client
 
-We provide a [`@hey-api/client-fetch`](https://heyapi.dev/) implementation to interact with the API.
+We provide a [Hey API](https://heyapi.dev/) implementation to interact with the API. Use `manager.getClientOptions()` to get the client configuration including base URL, user agent and API token.
 
 ```typescript
-import { createMission } from "@rescuetablet/missions-client";
+import { createMission } from "@rescuetablet/missions-client/client";
 
-await createMission(
-  {
+// create the manager as described above
+// const manager = …
+
+await createMission({
+  ...manager.getClientOptions(),
+  data: {
     keyword: "TEST",
     message: "Test Mission",
     // more mission data
   },
-  {
-    client: manager.client,
-    // additional hey-api/client-fetch options
-  }
-);
+  throwOnError: true,
+});
 ```
 
 ### Real-Time Updates
