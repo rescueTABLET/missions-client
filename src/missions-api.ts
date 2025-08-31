@@ -1,4 +1,4 @@
-import { type Config } from "./client/client/types.js";
+import { type Config } from "./client/client/types.gen.js";
 import { getFirebaseConfig, getUser } from "./client/sdk.gen.js";
 import type { FirebaseConfig, UserInfo } from "./client/types.gen.js";
 import { type Logger } from "./log.js";

@@ -1,4 +1,4 @@
-import { type Config } from "./client/client/types.js";
+import { type Config } from "./client/client/types.gen.js";
 import { type UserInfo } from "./client/types.gen.js";
 import {
   ConnectionManager,

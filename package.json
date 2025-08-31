@@ -40,18 +40,18 @@
     "generate": "openapi-ts && node scripts/post-process-client.js"
   },
   "optionalDependencies": {
-    "firebase": ">=11",
+    "firebase": ">=12",
     "react": ">=19"
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.1",
-    "@changesets/cli": "^2.29.4",
-    "@hey-api/openapi-ts": "^0.73.0",
+    "@changesets/cli": "^2.29.6",
+    "@hey-api/openapi-ts": "^0.82.1",
     "@types/node": "^22.15.31",
-    "@types/react": "^19.1.8",
-    "@types/web": "^0.0.241",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
+    "@types/react": "^19.1.12",
+    "@types/web": "^0.0.265",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
   },
   "volta": {
     "node": "22.13.0"

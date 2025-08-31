@@ -1970,6 +1970,10 @@ export type PostMissionResourceData = {
      * If set to `true`, the resource will be created in all missions of this API key where the resource does not exist yet. If set to `false`, the resource will only be updated if present in each mission.
      */
     create?: boolean;
+    /**
+     * Set to `true` to disable the default mechanism to automatically remove resources that enter status 2 from missions.
+     */
+    skipAutomaticStatusUpdates?: boolean;
   };
   url: "/resources";
 };
