@@ -71,6 +71,7 @@ export class RemoteMissionsApi implements MissionsApi {
     loadRemote: () => Promise<T>
   ): Promise<T> {
     const key = [args?.apiKey ?? "default", keySuffix].join(":");
+    this.#logger?.verbose(`Loading data from missions API ${key}…`);
 
     try {
       const value = await loadRemote();

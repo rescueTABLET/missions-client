@@ -1,10 +1,5 @@
 import { type FirebaseApp } from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithCustomToken,
-  signOut,
-} from "firebase/auth";
+import { getAuth, signInWithCustomToken, signOut } from "firebase/auth";
 import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import type {
   CollectionSnapshotListener,
@@ -42,8 +37,10 @@ export function browserFirebaseAdapter(firebase: FirebaseApp): IFirebase {
         error,
       }),
 
-    onAuthStateChanged: async (listener) =>
-      onAuthStateChanged(auth, (user) => listener(user ?? undefined)),
+    getCurrentUser: async () => {
+      await auth.authStateReady();
+      return auth.currentUser ?? undefined;
+    },
 
     signInWithCustomToken: async (token) => {
       const user = await signInWithCustomToken(auth, token);

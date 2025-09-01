@@ -55,7 +55,6 @@ export type CollectionSnapshotListener<T> = {
 };
 
 export type FirebaseUser = { uid: string };
-export type AuthStateChangeListener = (user?: FirebaseUser) => void;
 
 export type IFirebase = {
   onDocumentSnapshot<T>(
@@ -68,7 +67,7 @@ export type IFirebase = {
     listener: CollectionSnapshotListener<T>
   ): Promise<Unsubscribe>;
 
-  onAuthStateChanged(listener: AuthStateChangeListener): Promise<Unsubscribe>;
+  getCurrentUser(): Promise<FirebaseUser | undefined>;
 
   signInWithCustomToken(token: string): Promise<FirebaseUser>;
 

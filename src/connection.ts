@@ -2,7 +2,7 @@ import type { UserInfo } from "./client/types.gen.js";
 import { EventEmitter } from "./events.js";
 import { type Logger } from "./log.js";
 import { type MissionsApi } from "./missions-api.js";
-import type { FirebaseUser, IFirebase, Unsubscribe } from "./types.js";
+import type { FirebaseUser, IFirebase } from "./types.js";
 
 export type ConnectionEvent = {
   manager: ConnectionManager;
@@ -46,7 +46,7 @@ export class ConnectionManager extends EventEmitter<ConnectionManagerEventTypes>
 
   async authorize(missionsApiKey: string): Promise<void> {
     if (!this.#firebaseUser) {
-      this.#firebaseUser = await this.#getFirebaseAuthorization();
+      this.#firebaseUser = await this.#firebase.getCurrentUser();
 
       if (this.#firebaseUser) {
         this.#logger?.info(
@@ -114,15 +114,5 @@ export class ConnectionManager extends EventEmitter<ConnectionManagerEventTypes>
 
     this.#firebaseUser = undefined;
     this.emit("deauthorized", { manager: this });
-  }
-
-  #getFirebaseAuthorization(): Promise<FirebaseUser | undefined> {
-    let unsubscribe: Unsubscribe | undefined;
-
-    return new Promise<FirebaseUser | undefined>((resolve) => {
-      this.#firebase.onAuthStateChanged(resolve).then((s) => (unsubscribe = s));
-    }).finally(() => {
-      unsubscribe?.();
-    });
   }
 }
