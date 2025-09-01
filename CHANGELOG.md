@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.17.0
+
+### Minor Changes
+
+- 0aafb8b: Update Firebase adapter to get current user
+
 ## 0.16.0
 
 ### Minor Changes
