@@ -751,7 +751,8 @@ export type PatientData = {
   treatmentRefused?: boolean;
   resourceIds?: Array<string>;
   coordinates?: Coordinates;
-} & SectionsRef &
+} & WithAttachments &
+  SectionsRef &
   Tagged;
 
 export type PatientUpdate = PatientData & {
