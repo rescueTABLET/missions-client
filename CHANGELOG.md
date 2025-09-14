@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.17.1
+
+### Patch Changes
+
+- 9c78477: Add attachments for patients
+
 ## 0.17.0
 
 ### Minor Changes
