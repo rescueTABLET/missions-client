@@ -1,9 +1,11 @@
 import type {
   Action,
+  Attendance,
   Identifiable,
   MapElement,
   Mission,
   Patient,
+  Questionnaire,
   Report,
   Resource,
   Section,
@@ -19,6 +21,8 @@ export type FirestoreMission = Omit<
   | "mapElements"
   | "sections"
   | "patients"
+  | "attendances"
+  | "questionnaires"
 > & {
   resources?: Record<string, Omit<Resource, "id">>;
   removedResources?: Record<string, Omit<Resource, "id">>;
@@ -27,6 +31,8 @@ export type FirestoreMission = Omit<
   mapElements?: Record<string, Omit<MapElement, "id">>;
   patients?: Record<string, Omit<Patient, "id">>;
   sections?: Record<string, Omit<Section, "id">>;
+  attendances?: Record<string, Omit<Attendance, "id">>;
+  questionnaires?: Record<string, Omit<Questionnaire, "id">>;
   patientIds?: ReadonlyArray<string>;
 };
 
@@ -45,6 +51,8 @@ export function fromFirestoreMission(
     patients: mapToArray(data.patients),
     mapElements: mapToArray(data.mapElements),
     sections: mapToArray(data.sections),
+    attendances: mapToArray(data.attendances),
+    questionnaires: mapToArray(data.questionnaires),
     stale: stale ?? false,
   };
 }

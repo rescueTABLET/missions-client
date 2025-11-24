@@ -109,6 +109,7 @@ export type MissionResources = {
   files: Array<File>;
   patients: Array<Patient>;
   attendances: Array<Attendance>;
+  questionnaires: Array<Questionnaire>;
 };
 
 /**
@@ -550,6 +551,26 @@ export type AttendanceDeletedEvent = Event & {
   value: AttendanceData;
 };
 
+export type QuestionnaireCreatedEvent = Event & {
+  type: "questionnaire-created";
+  questionnaireId: string;
+  value: QuestionnaireData;
+};
+
+export type QuestionnaireUpdatedEvent = Event &
+  PropertyChanges & {
+    type: "questionnaire-updated";
+    questionnaireId: string;
+    oldValue: QuestionnaireData;
+    newValue: QuestionnaireData;
+  };
+
+export type QuestionnaireDeletedEvent = Event & {
+  type: "questionnaire-deleted";
+  questionnaireId?: string;
+  value: QuestionnaireData;
+};
+
 export type FileCreatedEvent = Event & {
   type: "file-created";
   fileId: string;
@@ -620,6 +641,15 @@ export type MissionEvent =
   | ({
       type: "attendance-deleted";
     } & AttendanceDeletedEvent)
+  | ({
+      type: "questionnaire-created";
+    } & QuestionnaireCreatedEvent)
+  | ({
+      type: "questionnaire-updated";
+    } & QuestionnaireUpdatedEvent)
+  | ({
+      type: "questionnaire-deleted";
+    } & QuestionnaireDeletedEvent)
   | ({
       type: "file-created";
     } & FileCreatedEvent);
@@ -854,6 +884,25 @@ export type AttendanceUpdate = {
   resourceName?: string;
   startedAt?: number;
   finishedAt?: number;
+};
+
+export type Questionnaire = Identifiable & Timestamps & QuestionnaireData;
+
+export type QuestionnaireData = {
+  designation: string;
+  conclusion?: QuestionnaireConclusion;
+};
+
+export type QuestionnaireUpdate = {
+  conclusion?: QuestionnaireConclusion;
+};
+
+export type QuestionnaireConclusion = {
+  conclusion?: string;
+  additionalConclusion?: string;
+  comment?: string;
+  commentInternal?: string;
+  burn?: string;
 };
 
 export type PostMissionData = {
@@ -1962,6 +2011,146 @@ export type CreateMissionAttendanceResponses = {
 
 export type CreateMissionAttendanceResponse =
   CreateMissionAttendanceResponses[keyof CreateMissionAttendanceResponses];
+
+export type RemoveMissionQuestionnaireData = {
+  body?: never;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+    /**
+     * The ID of the questionnaire
+     */
+    questionnaireId: Id;
+  };
+  query?: never;
+  url: "/missions/{missionId}/questionnaires/{questionnaireId}";
+};
+
+export type RemoveMissionQuestionnaireErrors = {
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: _Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: _Error;
+  /**
+   * The object was not found.
+   */
+  404: _Error;
+};
+
+export type RemoveMissionQuestionnaireError =
+  RemoveMissionQuestionnaireErrors[keyof RemoveMissionQuestionnaireErrors];
+
+export type RemoveMissionQuestionnaireResponses = {
+  /**
+   * The questionnaire was successfully removed from the mission.
+   */
+  200: Mission;
+};
+
+export type RemoveMissionQuestionnaireResponse =
+  RemoveMissionQuestionnaireResponses[keyof RemoveMissionQuestionnaireResponses];
+
+export type UpdateMissionQuestionnaireData = {
+  body: QuestionnaireUpdate;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+    /**
+     * The ID of the questionnaire
+     */
+    questionnaireId: Id;
+  };
+  query?: never;
+  url: "/missions/{missionId}/questionnaires/{questionnaireId}";
+};
+
+export type UpdateMissionQuestionnaireErrors = {
+  /**
+   * The input data is invalid.
+   */
+  400: _Error;
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: _Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: _Error;
+  /**
+   * The object was not found.
+   */
+  404: _Error;
+};
+
+export type UpdateMissionQuestionnaireError =
+  UpdateMissionQuestionnaireErrors[keyof UpdateMissionQuestionnaireErrors];
+
+export type UpdateMissionQuestionnaireResponses = {
+  /**
+   * The questionnaire was successfully updated.
+   */
+  200: Mission;
+};
+
+export type UpdateMissionQuestionnaireResponse =
+  UpdateMissionQuestionnaireResponses[keyof UpdateMissionQuestionnaireResponses];
+
+export type CreateMissionQuestionnaireData = {
+  body: QuestionnaireData;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+    /**
+     * The ID of the questionnaire
+     */
+    questionnaireId: Id;
+  };
+  query?: never;
+  url: "/missions/{missionId}/questionnaires/{questionnaireId}";
+};
+
+export type CreateMissionQuestionnaireErrors = {
+  /**
+   * The input data is invalid.
+   */
+  400: _Error;
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: _Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: _Error;
+  /**
+   * The object was not found.
+   */
+  404: _Error;
+};
+
+export type CreateMissionQuestionnaireError =
+  CreateMissionQuestionnaireErrors[keyof CreateMissionQuestionnaireErrors];
+
+export type CreateMissionQuestionnaireResponses = {
+  /**
+   * The questionnaire was successfully added to the mission.
+   */
+  200: Mission;
+};
+
+export type CreateMissionQuestionnaireResponse =
+  CreateMissionQuestionnaireResponses[keyof CreateMissionQuestionnaireResponses];
 
 export type PostMissionResourceData = {
   body: UpdateResourceInput;

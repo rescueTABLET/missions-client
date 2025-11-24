@@ -74,6 +74,15 @@ import type {
   CreateMissionAttendanceData,
   CreateMissionAttendanceResponses,
   CreateMissionAttendanceErrors,
+  RemoveMissionQuestionnaireData,
+  RemoveMissionQuestionnaireResponses,
+  RemoveMissionQuestionnaireErrors,
+  UpdateMissionQuestionnaireData,
+  UpdateMissionQuestionnaireResponses,
+  UpdateMissionQuestionnaireErrors,
+  CreateMissionQuestionnaireData,
+  CreateMissionQuestionnaireResponses,
+  CreateMissionQuestionnaireErrors,
   PostMissionResourceData,
   PostMissionResourceResponses,
   PostMissionResourceErrors,
@@ -765,6 +774,86 @@ export const createMissionAttendance = <ThrowOnError extends boolean = false>(
       },
     ],
     url: "/missions/{missionId}/attendances/{attendanceId}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Remove a questionnaire from a mission.
+ */
+export const removeMissionQuestionnaire = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<RemoveMissionQuestionnaireData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    RemoveMissionQuestionnaireResponses,
+    RemoveMissionQuestionnaireErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/missions/{missionId}/questionnaires/{questionnaireId}",
+    ...options,
+  });
+};
+
+/**
+ * Update an existing questionnaire.
+ */
+export const updateMissionQuestionnaire = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<UpdateMissionQuestionnaireData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    UpdateMissionQuestionnaireResponses,
+    UpdateMissionQuestionnaireErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/missions/{missionId}/questionnaires/{questionnaireId}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Register a new questionnaire for a mission.
+ */
+export const createMissionQuestionnaire = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<CreateMissionQuestionnaireData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).put<
+    CreateMissionQuestionnaireResponses,
+    CreateMissionQuestionnaireErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "authorization",
+        type: "apiKey",
+      },
+    ],
+    url: "/missions/{missionId}/questionnaires/{questionnaireId}",
     ...options,
     headers: {
       "Content-Type": "application/json",
