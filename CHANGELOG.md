@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.18.0
+
+### Minor Changes
+
+- 57dee06: Update client API: attendances and questionnaires
+
 ## 0.17.1
 
 ### Patch Changes
