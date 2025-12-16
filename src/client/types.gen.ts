@@ -94,7 +94,6 @@ export type OptionalMissionData = {
    *
    */
   expiresAfter?: number;
-  reportData?: MissionReportData;
 };
 
 export type Georeference = {
@@ -118,6 +117,7 @@ export type MissionResources = {
   patients: Array<Patient>;
   attendances: Array<Attendance>;
   questionnaires: Array<Questionnaire>;
+  reportData?: MissionReportData;
 };
 
 /**
@@ -950,12 +950,12 @@ export type MissionReportServices = {
 };
 
 export type MissionReportServiceInfo = {
-  atLocation: boolean;
+  atLocation?: boolean;
   text?: string;
 };
 
 export type MissionReportHandOver = {
-  timestamp: Timestamp;
+  timestamp?: Timestamp;
   text?: string;
 };
 
@@ -2157,6 +2157,50 @@ export type CreateMissionQuestionnaireResponses = {
 
 export type CreateMissionQuestionnaireResponse =
   CreateMissionQuestionnaireResponses[keyof CreateMissionQuestionnaireResponses];
+
+export type UpdateMissionReportDataData = {
+  body: MissionReportData;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+  };
+  query?: never;
+  url: "/missions/{missionId}/report-data";
+};
+
+export type UpdateMissionReportDataErrors = {
+  /**
+   * The input data is invalid.
+   */
+  400: Error;
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: Error;
+  /**
+   * The object was not found.
+   */
+  404: Error;
+};
+
+export type UpdateMissionReportDataError =
+  UpdateMissionReportDataErrors[keyof UpdateMissionReportDataErrors];
+
+export type UpdateMissionReportDataResponses = {
+  /**
+   * The report data was successfully updated.
+   */
+  200: Mission;
+};
+
+export type UpdateMissionReportDataResponse =
+  UpdateMissionReportDataResponses[keyof UpdateMissionReportDataResponses];
 
 export type PostMissionResourceData = {
   body: UpdateResourceInput;
