@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.19.1
+
+### Patch Changes
+
+- 2e51027: Treat report data as a value object
+
 ## 0.19.0
 
 ### Minor Changes
