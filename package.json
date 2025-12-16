@@ -45,15 +45,15 @@
   },
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.1",
-    "@changesets/cli": "^2.29.6",
-    "@hey-api/openapi-ts": "^0.82.1",
+    "@changesets/cli": "^2.29.8",
+    "@hey-api/openapi-ts": "^0.89.0",
     "@types/node": "^22.15.31",
-    "@types/react": "^19.1.12",
-    "@types/web": "^0.0.265",
-    "prettier": "^3.6.2",
-    "typescript": "^5.9.2"
+    "@types/react": "^19.2.7",
+    "@types/web": "^0.0.301",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3"
   },
   "volta": {
-    "node": "22.13.0"
+    "node": "24.12.0"
   }
 }
