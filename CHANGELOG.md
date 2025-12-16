@@ -1,5 +1,13 @@
 # @rescuetablet/missions-client
 
+## 0.19.0
+
+### Minor Changes
+
+- 2d2e374: Add mission report data
+- f2c1b89: Bump Node.js version from 22 to 24
+- f2c1b89: Bump dependencies
+
 ## 0.18.0
 
 ### Minor Changes
