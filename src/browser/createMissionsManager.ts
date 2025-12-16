@@ -6,8 +6,8 @@ import {
 } from "firebase/firestore";
 import { firebaseConfig } from "../firebase-config.js";
 import { type Logger } from "../log.js";
-import { MissionsManager } from "../manager.js";
 import { RemoteMissionsApi } from "../missions-api.js";
+import { MissionsManager } from "../MissionsManager.js";
 import { browserFirebaseAdapter } from "./adapter.js";
 import { browserLogger } from "./log.js";
 

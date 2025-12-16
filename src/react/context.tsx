@@ -4,7 +4,7 @@ import {
   useContext,
   useMemo,
 } from "react";
-import { type MissionsManager } from "../manager.js";
+import { type MissionsManager } from "../MissionsManager.js";
 
 export type MissionsContext = {
   readonly manager: MissionsManager;

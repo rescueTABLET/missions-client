@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.css";
+import { useState } from "react";
 import { type ManagedMission } from "../../src";
 import { createMissionsManager } from "../../src/browser";
 import {
@@ -51,21 +52,23 @@ function Missions() {
   const missions = useMissions();
 
   return Object.keys(missions).length ? (
-    <ul className="list-group">
+    <div className="accordion">
       {Object.values(missions)
         .toSorted((a, b) => a.id.localeCompare(b.id))
         .map((mission) => (
           <MissionItem key={mission.id} mission={mission} />
         ))}
-    </ul>
+    </div>
   ) : (
     <div className="alert alert-info">No missions</div>
   );
 }
 
 function MissionItem({ mission }: { mission: ManagedMission }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <li className="list-group-item">
+    <div className="accordion-item">
       {mission.state === "loading" && (
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Loading…</span>
@@ -75,15 +78,28 @@ function MissionItem({ mission }: { mission: ManagedMission }) {
         <div className="alert alert-danger">{mission.error.message}</div>
       )}
       {mission.state === "ready" && (
-        <span>
-          {mission.mission.keyword ? (
-            <span className="badge text-bg-primary me-1">
-              {mission.mission.keyword}
-            </span>
-          ) : null}
-          {mission.mission.message}
-        </span>
+        <>
+          <h2 className="accordion-header">
+            <button
+              className={`accordion-button ${open ? "" : "collapsed"}`}
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+            >
+              {mission.mission.keyword ? (
+                <span className="badge text-bg-primary me-1">
+                  {mission.mission.keyword}
+                </span>
+              ) : null}
+              {mission.mission.message}
+            </button>
+          </h2>
+          <div
+            className={`accordion-collapse collapse ${open ? "show" : ""} p-4`}
+          >
+            <pre>{JSON.stringify(mission.mission, null, 2)}</pre>
+          </div>
+        </>
       )}
-    </li>
+    </div>
   );
 }

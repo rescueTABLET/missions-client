@@ -1,40 +1,7 @@
-import type {
-  Action,
-  Attendance,
-  Identifiable,
-  MapElement,
-  Mission,
-  Patient,
-  Questionnaire,
-  Report,
-  Resource,
-  Section,
-} from "./client/types.gen.js";
+import type { MissionAggregates, MissionBase } from "./client/types.gen.js";
 import type { RemoteMission } from "./types.js";
 
-export type FirestoreMission = Omit<
-  Mission,
-  | "id"
-  | "resources"
-  | "actions"
-  | "reports"
-  | "mapElements"
-  | "sections"
-  | "patients"
-  | "attendances"
-  | "questionnaires"
-> & {
-  resources?: Record<string, Omit<Resource, "id">>;
-  removedResources?: Record<string, Omit<Resource, "id">>;
-  actions?: Record<string, Omit<Action, "id">>;
-  reports?: Record<string, Omit<Report, "id">>;
-  mapElements?: Record<string, Omit<MapElement, "id">>;
-  patients?: Record<string, Omit<Patient, "id">>;
-  sections?: Record<string, Omit<Section, "id">>;
-  attendances?: Record<string, Omit<Attendance, "id">>;
-  questionnaires?: Record<string, Omit<Questionnaire, "id">>;
-  patientIds?: ReadonlyArray<string>;
-};
+export type FirestoreMission = MissionBase & MissionAggregates;
 
 export function fromFirestoreMission(
   id: string,
@@ -44,26 +11,8 @@ export function fromFirestoreMission(
   return {
     ...data,
     id,
-    resources: mapToArray(data.resources),
-    removedResources: mapToArray(data.removedResources),
-    actions: mapToArray(data.actions),
-    reports: mapToArray(data.reports),
-    patients: mapToArray(data.patients),
-    mapElements: mapToArray(data.mapElements),
-    sections: mapToArray(data.sections),
-    attendances: mapToArray(data.attendances),
-    questionnaires: mapToArray(data.questionnaires),
     stale: stale ?? false,
   };
-}
-
-function mapToArray<T extends Identifiable>(
-  map?: Record<string, Omit<T, "id">>
-): Array<T> {
-  return Object.entries(map ?? {}).map(([id, element]: [string, any]) => ({
-    id,
-    ...element,
-  }));
 }
 
 export type FirestoreUser = {

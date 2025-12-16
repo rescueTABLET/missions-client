@@ -1,14 +1,17 @@
-import type { Mission, Resource, UserInfo } from "./client/types.gen.js";
+import type {
+  MissionAggregates,
+  MissionBase,
+  UserInfo,
+} from "./client/types.gen.js";
 
 export type LoadingState = { state: "loading" };
 export type ReadyState<T> = { state: "ready"; data: T };
 export type ErrorState = { state: "error"; error: Error };
 export type DataState<T> = LoadingState | ReadyState<T> | ErrorState;
 
-export type RemoteMission = Mission & {
-  removedResources?: ReadonlyArray<Resource>;
-  stale: boolean;
-};
+export type Stale = { stale: boolean };
+
+export type RemoteMission = MissionBase & MissionAggregates & Stale;
 
 export type ManagedMission =
   | { id: string; state: "loading" }

@@ -5,19 +5,17 @@ import {
   type ConnectionAuthorizedEvent,
 } from "./connection.js";
 import { EventEmitter } from "./events.js";
-import {
-  fromFirestoreMission,
-  type FirestoreMission,
-  type FirestoreUser,
-} from "./firestore.js";
+import { type FirestoreUser } from "./firestore.js";
 import { type Logger } from "./log.js";
+import { MissionManager } from "./MissionManager.js";
 import { RemoteMissionsApi, type MissionsApi } from "./missions-api.js";
 import { onSnapshotWithBackoff } from "./onSnapshotWithBackoff.js";
 import type {
   IFirebase,
   ManagedMission,
+  ManagedMissionRemovedEvent,
+  ManagedMissionUpdatedEvent,
   MissionsManagerEventTypes,
-  RemoteMission,
 } from "./types.js";
 
 export type MissionsManagerOptions = {
@@ -27,11 +25,9 @@ export type MissionsManagerOptions = {
 };
 
 export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
-  readonly missions = new Map<string, ManagedMission>();
   readonly #missionsApi: MissionsApi;
   readonly #connections: ConnectionManager;
   readonly #logger?: Logger;
-  readonly #subscriptions = new Map<string, () => void>();
   #userSubscription?: () => void;
 
   readonly #firebase: IFirebase;
@@ -42,6 +38,16 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
   #user?: UserInfo;
   get user(): UserInfo | undefined {
     return this.#user;
+  }
+
+  readonly #missions = new Map<string, MissionManager>();
+  get missions(): ReadonlyMap<string, ManagedMission> {
+    return new Map(
+      [...this.#missions.values()].map((manager) => [
+        manager.missionId,
+        manager.mission,
+      ])
+    );
   }
 
   constructor(options: MissionsManagerOptions) {
@@ -165,60 +171,39 @@ export class MissionsManager extends EventEmitter<MissionsManagerEventTypes> {
 
   #subscribe(missionId: string) {
     this.#logger?.info(`[manager] Subscribing to mission ${missionId}…`);
-    this.missions.set(missionId, { id: missionId, state: "loading" });
+
+    const manager = new MissionManager({
+      missionId,
+      firebase: this.#firebase,
+      logger: this.#logger,
+    });
+
+    this.#missions.set(missionId, manager);
     this.emit("mission_added", { id: missionId, state: "loading" });
 
-    onSnapshotWithBackoff<FirestoreMission>(
-      this.#firebase,
-      `missions/${missionId}`,
-      (snapshot) => {
-        if (snapshot.data) {
-          this.#updateMission(missionId, snapshot.data);
-        } else {
-          this.#logger?.warn(`[manager] Mission not found: ${missionId}`);
-          this.#unsubscribe(missionId, true);
-        }
-      },
-      {
-        logger: this.#logger,
-        maxDelay: 30000,
-      }
-    )
-      .then((unsubscribe) => {
-        this.#subscriptions.set(missionId, unsubscribe);
-      })
-      .catch((error) => {
-        this.#unsubscribe(missionId, true);
-        this.missions.set(missionId, { id: missionId, state: "error", error });
-      });
-  }
+    const missionUpdatedListener = (event: ManagedMissionUpdatedEvent) =>
+      this.emit("mission_updated", event);
+    manager.on("mission_updated", missionUpdatedListener);
 
-  #updateMission(missionId: string, snapshot: FirestoreMission) {
-    const mission: RemoteMission = fromFirestoreMission(missionId, snapshot);
-
-    const value: ManagedMission = {
-      id: missionId,
-      state: "ready",
-      mission,
+    const missionRemovedListener = (event: ManagedMissionRemovedEvent) => {
+      this.#missions.delete(missionId);
+      manager.off("mission_updated", missionUpdatedListener);
+      manager.off("mission_removed", missionRemovedListener);
+      this.emit("mission_removed", event);
     };
 
-    this.missions.set(missionId, value);
-    this.emit("mission_updated", value);
+    manager.on("mission_removed", missionRemovedListener);
   }
 
-  #unsubscribe(missionId: string, skipDelete?: boolean) {
+  #unsubscribe(missionId: string) {
     this.#logger?.info(`[manager] Unsubscribing from mission ${missionId}…`);
-    this.#subscriptions.get(missionId)?.();
-    this.#subscriptions.delete(missionId);
-
-    if (!skipDelete) {
-      this.missions.delete(missionId);
-      this.emit("mission_removed", { id: missionId });
-    }
+    this.#missions.get(missionId)?.close();
   }
 
   async close() {
     this.#logger?.info("[manager] Closing…");
+
+    this.#missions.forEach((mission) => mission.close());
 
     this.#connections.off("authorized", this.#authorizedListener);
     this.#connections.off("deauthorized", this.#deauthorize);
