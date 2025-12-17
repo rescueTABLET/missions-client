@@ -1,12 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { EventCollector } from "./EventCollector.js";
-import {
-  type FirestoreUser,
-  UserManager,
-  userManagerEventTypes,
-} from "./UserManager.js";
 import { NodeFirebaseAdapter } from "./firebase/NodeFirebaseAdapter.js";
 import { FirestoreEmitter } from "./firebase/NodeFirestore.js";
+import { firebaseDocumentObserverEventTypes } from "./FirebaseDocumentObserver.js";
+import { type FirestoreUser, UserManager } from "./UserManager.js";
 
 describe("UserManager", () => {
   it("should subscribe to user document", async () => {
@@ -19,10 +16,14 @@ describe("UserManager", () => {
     });
 
     const manager = new UserManager({ firebase, userId });
-    const collector = new EventCollector(manager, userManagerEventTypes);
+    const collector = new EventCollector(
+      manager,
+      firebaseDocumentObserverEventTypes
+    );
 
     firestoreEmitter.emitDocumentSnapshot("users/userId", {
       id: "userId",
+      metadata: { fromCache: false },
       data: () =>
         ({
           groupPermissions: {},
@@ -39,7 +40,7 @@ describe("UserManager", () => {
         event: "data",
         args: [
           {
-            user: {
+            data: {
               id: "userId",
               defaultMissionGroups: [],
               missionIds: [],
@@ -63,10 +64,14 @@ describe("UserManager", () => {
     });
 
     const manager = new UserManager({ firebase, userId });
-    const collector = new EventCollector(manager, userManagerEventTypes);
+    const collector = new EventCollector(
+      manager,
+      firebaseDocumentObserverEventTypes
+    );
 
     firestoreEmitter.emitDocumentSnapshot("users/userId", {
       id: "userId",
+      metadata: { fromCache: false },
       data: () => undefined,
     });
 
@@ -89,7 +94,10 @@ describe("UserManager", () => {
     });
 
     const manager = new UserManager({ firebase, userId });
-    const collector = new EventCollector(manager, userManagerEventTypes);
+    const collector = new EventCollector(
+      manager,
+      firebaseDocumentObserverEventTypes
+    );
 
     const error = new Error("Test error");
     firestoreEmitter.emitDocumentError("users/userId", error);

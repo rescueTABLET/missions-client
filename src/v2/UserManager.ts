@@ -1,6 +1,5 @@
-import { type Unsubscribe } from "../types.js";
-import { EventEmitter } from "./EventEmitter.js";
 import { type FirebaseAdapter } from "./firebase/types.js";
+import { FirebaseDocumentObserver } from "./FirebaseDocumentObserver.js";
 import { type Logger } from "./log.js";
 
 export type User = {
@@ -19,24 +18,7 @@ export type Group = {
   readonly name?: string;
 };
 
-export type UserManagerEvents = {
-  readonly data: { readonly user?: User };
-  readonly error: { readonly error: Error };
-  readonly close: {};
-};
-
-export const userManagerEventTypes: readonly (keyof UserManagerEvents)[] = [
-  "data",
-  "error",
-  "close",
-];
-
-export class UserManager extends EventEmitter<UserManagerEvents> {
-  readonly #firebase: FirebaseAdapter;
-  readonly #logger?: Logger;
-  #unsubscribe?: Unsubscribe;
-  #user?: User;
-
+export class UserManager extends FirebaseDocumentObserver<FirestoreUser, User> {
   constructor({
     firebase,
     userId,
@@ -46,36 +28,7 @@ export class UserManager extends EventEmitter<UserManagerEvents> {
     readonly userId: string;
     readonly logger?: Logger;
   }) {
-    super();
-    this.#firebase = firebase;
-    this.#logger = logger;
-    this.#subscribe(userId);
-  }
-
-  async #subscribe(userId: string) {
-    this.#logger?.verbose(`UserManager: subscribing to user ${userId}…`);
-
-    this.#unsubscribe = await this.#firebase.onDocumentSnapshot<FirestoreUser>(
-      `users/${userId}`,
-      {
-        next: ({ id, data }) => {
-          this.#logger?.verbose(
-            `UserManager: received snapshot for user ${userId}`
-          );
-          this.#user = data ? toUser(id, data) : undefined;
-          this.emit("data", { user: this.#user });
-        },
-        error: (error) => {
-          this.emit("error", { error });
-        },
-      }
-    );
-  }
-
-  override async close() {
-    this.#unsubscribe?.();
-    super.close();
-    this.emit("close", {});
+    super({ firebase, ref: `users/${userId}`, convert: toUser, logger });
   }
 }
 

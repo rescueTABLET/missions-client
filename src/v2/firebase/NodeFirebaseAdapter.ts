@@ -53,7 +53,11 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
   ) {
     return this.#firestore.onDocumentSnapshot(ref, {
       next: (snapshot) =>
-        next({ id: snapshot.id, data: snapshot.data() as T | undefined }),
+        next({
+          id: snapshot.id,
+          data: snapshot.data() as T | undefined,
+          metadata: snapshot.metadata,
+        }),
       error,
     });
   }
@@ -65,9 +69,11 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
     return this.#firestore.onCollectionSnapshot(ref, {
       next: (snapshot) =>
         next({
+          metadata: snapshot.metadata,
           documents: snapshot.docs.map((doc) => ({
             id: doc.id,
             data: doc.data() as T,
+            metadata: doc.metadata,
           })),
         }),
       error,

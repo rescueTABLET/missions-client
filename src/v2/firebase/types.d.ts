@@ -1,7 +1,12 @@
 export type Unsubscribe = () => void;
 
+export type SnapshotMetadata = {
+  readonly fromCache: boolean;
+};
+
 export type DocumentSnapshot<T> = {
   readonly id: string;
+  readonly metadata: SnapshotMetadata;
   readonly data?: T;
 };
 
@@ -11,6 +16,7 @@ export interface DocumentSnapshotListener<T> {
 }
 
 export type CollectionSnapshot<T> = {
+  readonly metadata: SnapshotMetadata;
   readonly documents: ReadonlyArray<Required<DocumentSnapshot<T>>>;
 };
 

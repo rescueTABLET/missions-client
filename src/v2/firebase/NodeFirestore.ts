@@ -6,6 +6,7 @@ import {
   type Unsubscribe,
 } from "firebase/firestore";
 import { EventEmitter } from "../EventEmitter.js";
+import type { SnapshotMetadata } from "./types.js";
 
 export type DocumentReference = {
   readonly type: "document";
@@ -25,11 +26,13 @@ export type Observer<T> = {
 
 export type DocumentSnapshot = {
   readonly id: string;
+  readonly metadata: SnapshotMetadata;
   data(): unknown;
 };
 
 export type CollectionSnapshot = {
   readonly id: string;
+  readonly metadata: SnapshotMetadata;
   readonly docs: readonly DocumentSnapshot[];
 };
 
@@ -101,7 +104,11 @@ export class NodeFirestore {
         doc: (path) => doc(firestore, path),
         collection: (path) => collection(firestore, path),
         onSnapshot: (reference, observer) =>
-          onSnapshot(reference as any, observer as any),
+          onSnapshot(
+            reference as any,
+            { includeMetadataChanges: true },
+            observer as any
+          ),
       },
     });
   }

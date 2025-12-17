@@ -14,6 +14,7 @@ describe("NodeFirestore", () => {
         NodeFirestore.createNull({ emitter });
         emitter.emitDocumentSnapshot("path/to/doc", {
           id: "doc",
+          metadata: { fromCache: false },
           data: () => ({ field: "value" }),
         });
       });
@@ -31,6 +32,7 @@ describe("NodeFirestore", () => {
 
             emitter.emitDocumentSnapshot("path/to/doc", {
               id: "doc",
+              metadata: { fromCache: false },
               data: () => ({ field: "value" }),
             });
           }
@@ -52,6 +54,7 @@ describe("NodeFirestore", () => {
 
         emitter.emitDocumentSnapshot("path/to/doc", {
           id: "doc",
+          metadata: { fromCache: false },
           data: () => ({ field: "value" }),
         });
 
@@ -59,6 +62,7 @@ describe("NodeFirestore", () => {
 
         emitter.emitDocumentSnapshot("path/to/doc", {
           id: "doc",
+          metadata: { fromCache: false },
           data: () => ({ field: "value" }),
         });
 
@@ -103,9 +107,18 @@ describe("NodeFirestore", () => {
 
           emitter.emitCollectionSnapshot("path/to/doc", {
             id: "docs",
+            metadata: { fromCache: false },
             docs: [
-              { id: "doc1", data: () => ({ field: "value1" }) },
-              { id: "doc2", data: () => ({ field: "value2" }) },
+              {
+                id: "doc1",
+                metadata: { fromCache: false },
+                data: () => ({ field: "value1" }),
+              },
+              {
+                id: "doc2",
+                metadata: { fromCache: false },
+                data: () => ({ field: "value2" }),
+              },
             ],
           });
         }
