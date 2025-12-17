@@ -129,6 +129,9 @@ import type {
   UpdateMissionPatientData,
   UpdateMissionPatientErrors,
   UpdateMissionPatientResponses,
+  UpdateMissionReportDataData,
+  UpdateMissionReportDataErrors,
+  UpdateMissionReportDataResponses,
   UpdateMissionResourceData,
   UpdateMissionResourceErrors,
   UpdateMissionResourceResponses,
@@ -668,6 +671,26 @@ export const createMissionQuestionnaire = <
   >({
     security: [{ name: "authorization", type: "apiKey" }],
     url: "/missions/{missionId}/questionnaires/{questionnaireId}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+
+/**
+ * Update the report data for a mission
+ */
+export const updateMissionReportData = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateMissionReportDataData, ThrowOnError>,
+) =>
+  (options.client ?? client).patch<
+    UpdateMissionReportDataResponses,
+    UpdateMissionReportDataErrors,
+    ThrowOnError
+  >({
+    security: [{ name: "authorization", type: "apiKey" }],
+    url: "/missions/{missionId}/report-data",
     ...options,
     headers: {
       "Content-Type": "application/json",

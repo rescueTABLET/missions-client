@@ -5,33 +5,38 @@ import {
   UserManager,
   userManagerEventTypes,
 } from "./UserManager.js";
-import { FirebaseAdapterStub } from "./firebase/FirebaseAdapterStub.js";
+import { NodeFirebaseAdapter } from "./firebase/NodeFirebaseAdapter.js";
+import { FirestoreEmitter } from "./firebase/NodeFirestore.js";
 
 describe("UserManager", () => {
-  it("should work", async () => {
+  it("should subscribe to user document", async () => {
     const userId = "userId";
 
-    const firebase = new FirebaseAdapterStub({
-      documents: {
-        "users/userId": {
-          groupPermissions: {},
-          missions: {},
-          groups: {},
-          permissions: {},
-          defaultMissionGroups: [],
-        } satisfies FirestoreUser,
-      },
+    const firestoreEmitter = new FirestoreEmitter();
+
+    const firebase = NodeFirebaseAdapter.createNull({
+      firestore: { emitter: firestoreEmitter },
     });
 
     const manager = new UserManager({ firebase, userId });
     const collector = new EventCollector(manager, userManagerEventTypes);
 
-    // wait one tick
-    await new Promise((resolve) => setTimeout(resolve, 16));
+    firestoreEmitter.emitDocumentSnapshot("users/userId", {
+      id: "userId",
+      data: () =>
+        ({
+          groupPermissions: {},
+          missions: {},
+          groups: {},
+          permissions: {},
+          defaultMissionGroups: [],
+        }) satisfies FirestoreUser,
+    });
+
     const events = collector.done();
     expect(events).toEqual([
       {
-        event: "change",
+        event: "data",
         args: [
           {
             user: {
@@ -44,6 +49,56 @@ describe("UserManager", () => {
             },
           },
         ],
+      },
+    ]);
+  });
+
+  it("should handle non-existing user document", async () => {
+    const userId = "userId";
+
+    const firestoreEmitter = new FirestoreEmitter();
+
+    const firebase = NodeFirebaseAdapter.createNull({
+      firestore: { emitter: firestoreEmitter },
+    });
+
+    const manager = new UserManager({ firebase, userId });
+    const collector = new EventCollector(manager, userManagerEventTypes);
+
+    firestoreEmitter.emitDocumentSnapshot("users/userId", {
+      id: "userId",
+      data: () => undefined,
+    });
+
+    const events = collector.done();
+    expect(events).toEqual([
+      {
+        event: "data",
+        args: [{ user: undefined }],
+      },
+    ]);
+  });
+
+  it("should forward errors", async () => {
+    const userId = "userId";
+
+    const firestoreEmitter = new FirestoreEmitter();
+
+    const firebase = NodeFirebaseAdapter.createNull({
+      firestore: { emitter: firestoreEmitter },
+    });
+
+    const manager = new UserManager({ firebase, userId });
+    const collector = new EventCollector(manager, userManagerEventTypes);
+
+    const error = new Error("Test error");
+    firestoreEmitter.emitDocumentError("users/userId", error);
+
+    const events = collector.done();
+    expect(events).toEqual([
+      {
+        event: "error",
+        args: [{ error }],
       },
     ]);
   });

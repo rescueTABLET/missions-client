@@ -1,6 +1,7 @@
 import { type Unsubscribe } from "../types.js";
 import { EventEmitter } from "./EventEmitter.js";
 import { type FirebaseAdapter } from "./firebase/types.js";
+import { type Logger } from "./log.js";
 
 export type User = {
   readonly id: string;
@@ -10,43 +11,59 @@ export type User = {
   readonly missionIds: readonly string[];
   readonly permissions: readonly string[];
   readonly groupPermissions: Record<string, readonly string[]>;
-  readonly groups: { readonly id: string; readonly name?: string }[];
+  readonly groups: readonly Group[];
+};
+
+export type Group = {
+  readonly id: string;
+  readonly name?: string;
 };
 
 export type UserManagerEvents = {
-  readonly change: { readonly user?: User };
+  readonly data: { readonly user?: User };
   readonly error: { readonly error: Error };
+  readonly close: {};
 };
 
 export const userManagerEventTypes: readonly (keyof UserManagerEvents)[] = [
-  "change",
+  "data",
   "error",
+  "close",
 ];
 
 export class UserManager extends EventEmitter<UserManagerEvents> {
   readonly #firebase: FirebaseAdapter;
+  readonly #logger?: Logger;
   #unsubscribe?: Unsubscribe;
   #user?: User;
 
   constructor({
     firebase,
     userId,
+    logger,
   }: {
     readonly firebase: FirebaseAdapter;
     readonly userId: string;
+    readonly logger?: Logger;
   }) {
     super();
     this.#firebase = firebase;
-    setTimeout(() => this.#subscribe(userId), 0);
+    this.#logger = logger;
+    this.#subscribe(userId);
   }
 
   async #subscribe(userId: string) {
+    this.#logger?.verbose(`UserManager: subscribing to user ${userId}…`);
+
     this.#unsubscribe = await this.#firebase.onDocumentSnapshot<FirestoreUser>(
       `users/${userId}`,
       {
         next: ({ id, data }) => {
-          this.#user = id && data ? toUser(id, data) : undefined;
-          this.emit("change", { user: this.#user });
+          this.#logger?.verbose(
+            `UserManager: received snapshot for user ${userId}`
+          );
+          this.#user = data ? toUser(id, data) : undefined;
+          this.emit("data", { user: this.#user });
         },
         error: (error) => {
           this.emit("error", { error });
@@ -58,6 +75,7 @@ export class UserManager extends EventEmitter<UserManagerEvents> {
   override async close() {
     this.#unsubscribe?.();
     super.close();
+    this.emit("close", {});
   }
 }
 

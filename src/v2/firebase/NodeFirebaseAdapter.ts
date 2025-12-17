@@ -1,11 +1,6 @@
-import { Auth, signInWithCustomToken, signOut } from "firebase/auth";
-import {
-  collection,
-  doc,
-  type Firestore,
-  onSnapshot,
-} from "firebase/firestore";
+import { Auth } from "firebase/auth";
 import { NodeAuth } from "./NodeAuth.js";
+import { type FirestoreEmitter, NodeFirestore } from "./NodeFirestore.js";
 import type {
   CollectionSnapshotListener,
   DocumentSnapshotListener,
@@ -14,14 +9,14 @@ import type {
 } from "./types.js";
 
 export class NodeFirebaseAdapter implements FirebaseAdapter {
-  readonly #firestore: Firestore;
+  readonly #firestore: NodeFirestore;
   readonly #auth: NodeAuth;
 
   constructor({
     firestore,
     auth,
   }: {
-    readonly firestore: Firestore;
+    readonly firestore: NodeFirestore;
     readonly auth: NodeAuth;
   }) {
     this.#firestore = firestore;
@@ -32,7 +27,7 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
     firestore,
     auth,
   }: {
-    readonly firestore: Firestore;
+    readonly firestore: NodeFirestore;
     readonly auth: Auth;
   }): NodeFirebaseAdapter {
     return new NodeFirebaseAdapter({
@@ -41,9 +36,13 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
     });
   }
 
-  static createNull(): NodeFirebaseAdapter {
+  static createNull({
+    firestore,
+  }: {
+    readonly firestore?: { readonly emitter?: FirestoreEmitter };
+  } = {}): NodeFirebaseAdapter {
     return new NodeFirebaseAdapter({
-      firestore: undefined,
+      firestore: NodeFirestore.createNull(firestore),
       auth: NodeAuth.createNull(),
     });
   }
@@ -52,9 +51,7 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
     ref: string,
     { next, error }: DocumentSnapshotListener<T>
   ) {
-    const docRef = doc(this.#firestore, ref);
-
-    return onSnapshot(docRef, {
+    return this.#firestore.onDocumentSnapshot(ref, {
       next: (snapshot) =>
         next({ id: snapshot.id, data: snapshot.data() as T | undefined }),
       error,
@@ -65,9 +62,7 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
     ref: string,
     { next, error }: CollectionSnapshotListener<T>
   ) {
-    const collRef = collection(this.#firestore, ref);
-
-    return onSnapshot(collRef, {
+    return this.#firestore.onCollectionSnapshot(ref, {
       next: (snapshot) =>
         next({
           documents: snapshot.docs.map((doc) => ({
@@ -80,16 +75,14 @@ export class NodeFirebaseAdapter implements FirebaseAdapter {
   }
 
   async getCurrentUser(): Promise<FirebaseUser | undefined> {
-    await this.#auth.authStateReady();
-    return this.#auth.currentUser ?? undefined;
+    return this.#auth.getCurrentUser();
   }
 
   async signInWithCustomToken(token: string): Promise<FirebaseUser> {
-    const user = await signInWithCustomToken(this.#auth, token);
-    return user.user;
+    return this.#auth.signInWithCustomToken(token);
   }
 
   async signOut() {
-    await signOut(this.#auth);
+    await this.#auth.signOut();
   }
 }

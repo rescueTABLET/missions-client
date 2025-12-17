@@ -117,6 +117,7 @@ export type MissionResources = {
   patients: Array<Patient>;
   attendances: Array<Attendance>;
   questionnaires: Array<Questionnaire>;
+  reportData?: MissionReportData;
 };
 
 /**
@@ -584,6 +585,13 @@ export type FileCreatedEvent = Event & {
   value: FileData;
 };
 
+export type MissionReportUpdatedEvent = Event &
+  PropertyChanges & {
+    type: "mission-report-updated";
+    oldValue: MissionReportData;
+    newValue: MissionReportData;
+  };
+
 export type MissionEvent =
   | ({
       type: "mission-created";
@@ -659,7 +667,10 @@ export type MissionEvent =
     } & QuestionnaireDeletedEvent)
   | ({
       type: "file-created";
-    } & FileCreatedEvent);
+    } & FileCreatedEvent)
+  | ({
+      type: "mission-report-updated";
+    } & MissionReportUpdatedEvent);
 
 export type MissionReport = Identifiable &
   MissionData &
@@ -906,6 +917,46 @@ export type QuestionnaireConclusion = {
   comment?: string;
   commentInternal?: string;
   burn?: string;
+};
+
+export type MissionReportData = {
+  situationUnderControl?: Timestamp;
+  situationCompleted?: Timestamp;
+  situationEnded?: Timestamp;
+  personCounts?: MissionReportPersonCounts;
+  feesApply?: boolean;
+  situationUponArrival?: string;
+  activitiesPerformed?: string;
+  consumables?: string;
+  comment?: string;
+  perpetrator?: string;
+  injuredParty?: string;
+  services?: MissionReportServices;
+  handOver?: MissionReportHandOver;
+};
+
+export type MissionReportPersonCounts = {
+  rescued?: number;
+  injured?: number;
+  deceased?: number;
+  staffInjured?: number;
+  staffDeceased?: number;
+};
+
+export type MissionReportServices = {
+  fire?: MissionReportServiceInfo;
+  police?: MissionReportServiceInfo;
+  medical?: MissionReportServiceInfo;
+};
+
+export type MissionReportServiceInfo = {
+  atLocation?: boolean;
+  text?: string;
+};
+
+export type MissionReportHandOver = {
+  timestamp?: Timestamp;
+  text?: string;
 };
 
 export type PostMissionData = {
@@ -2106,6 +2157,50 @@ export type CreateMissionQuestionnaireResponses = {
 
 export type CreateMissionQuestionnaireResponse =
   CreateMissionQuestionnaireResponses[keyof CreateMissionQuestionnaireResponses];
+
+export type UpdateMissionReportDataData = {
+  body: MissionReportData;
+  path: {
+    /**
+     * The ID of the mission
+     */
+    missionId: Uuid;
+  };
+  query?: never;
+  url: "/missions/{missionId}/report-data";
+};
+
+export type UpdateMissionReportDataErrors = {
+  /**
+   * The input data is invalid.
+   */
+  400: Error;
+  /**
+   * The request was not authorized. Most likely you forgot to send the API key in the header `Authorization`.
+   */
+  401: Error;
+  /**
+   * You are not allowed to perform the requested operation on this resource.
+   */
+  403: Error;
+  /**
+   * The object was not found.
+   */
+  404: Error;
+};
+
+export type UpdateMissionReportDataError =
+  UpdateMissionReportDataErrors[keyof UpdateMissionReportDataErrors];
+
+export type UpdateMissionReportDataResponses = {
+  /**
+   * The report data was successfully updated.
+   */
+  200: Mission;
+};
+
+export type UpdateMissionReportDataResponse =
+  UpdateMissionReportDataResponses[keyof UpdateMissionReportDataResponses];
 
 export type PostMissionResourceData = {
   body: UpdateResourceInput;

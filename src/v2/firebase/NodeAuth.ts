@@ -1,4 +1,4 @@
-import { signInWithCustomToken, type Auth } from "firebase/auth";
+import { signInWithCustomToken, signOut, type Auth } from "firebase/auth";
 import type { FirebaseUser } from "./types";
 
 type SignInWithCustomTokenResult = { readonly user: FirebaseUser };
@@ -7,6 +7,7 @@ interface FirebaseAuthApi {
   currentUser: FirebaseUser | null;
   authStateReady(): Promise<void>;
   signInWithCustomToken(token: string): Promise<SignInWithCustomTokenResult>;
+  signOut(): Promise<void>;
 }
 
 export class NodeAuth {
@@ -22,6 +23,7 @@ export class NodeAuth {
       authStateReady: auth.authStateReady.bind(auth),
       signInWithCustomToken: (token: string) =>
         signInWithCustomToken(auth, token),
+      signOut: () => signOut(auth),
     });
   }
 
@@ -44,6 +46,10 @@ export class NodeAuth {
   async signInWithCustomToken(token: string): Promise<FirebaseUser> {
     const { user } = await this.#auth.signInWithCustomToken(token);
     return user;
+  }
+
+  async signOut(): Promise<void> {
+    await this.#auth.signOut();
   }
 }
 
@@ -82,5 +88,9 @@ class FirebaseAuthStub implements FirebaseAuthApi {
 
     this.currentUser = null;
     throw new Error("Unexpected sign in token");
+  }
+
+  async signOut(): Promise<void> {
+    this.currentUser = null;
   }
 }

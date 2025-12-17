@@ -7,7 +7,7 @@ export type DocumentSnapshot<T> = {
 
 export interface DocumentSnapshotListener<T> {
   next: (snapshot: DocumentSnapshot<T>) => void;
-  error: (error: Error) => void;
+  error?: (error: Error) => void;
 }
 
 export type CollectionSnapshot<T> = {

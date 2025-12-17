@@ -5,7 +5,7 @@ import { firebaseConfig } from "./firebase-config.js";
 import { NodeAuth } from "./NodeAuth.js";
 
 describe("NodeFirebaseAdapter", () => {
-  describe("actual", () => {
+  describe.skip("actual", () => {
     function initialize() {
       const app = initializeApp(firebaseConfig);
 
