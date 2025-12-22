@@ -690,7 +690,7 @@ export const updateMissionReportData = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     security: [{ name: "authorization", type: "apiKey" }],
-    url: "/missions/{missionId}/report-data",
+    url: "/missions/{missionId}/report-data/{reportId}",
     ...options,
     headers: {
       "Content-Type": "application/json",

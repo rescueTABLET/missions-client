@@ -117,7 +117,7 @@ export type MissionResources = {
   patients: Array<Patient>;
   attendances: Array<Attendance>;
   questionnaires: Array<Questionnaire>;
-  reportData?: MissionReportData;
+  reportData: Array<MissionReportData>;
 };
 
 /**
@@ -588,6 +588,7 @@ export type FileCreatedEvent = Event & {
 export type MissionReportUpdatedEvent = Event &
   PropertyChanges & {
     type: "mission-report-updated";
+    reportId: string;
     oldValue: MissionReportData;
     newValue: MissionReportData;
   };
@@ -920,6 +921,8 @@ export type QuestionnaireConclusion = {
 };
 
 export type MissionReportData = {
+  id: string;
+  reportType: MissionReportType;
   situationUnderControl?: Timestamp;
   situationCompleted?: Timestamp;
   situationEnded?: Timestamp;
@@ -934,6 +937,25 @@ export type MissionReportData = {
   services?: MissionReportServices;
   handOver?: MissionReportHandOver;
 };
+
+export type UpdateMissionReportData = {
+  reportType?: MissionReportType;
+  situationUnderControl?: Timestamp;
+  situationCompleted?: Timestamp;
+  situationEnded?: Timestamp;
+  personCounts?: MissionReportPersonCounts;
+  feesApply?: boolean;
+  situationUponArrival?: string;
+  activitiesPerformed?: string;
+  consumables?: string;
+  comment?: string;
+  perpetrator?: string;
+  injuredParty?: string;
+  services?: MissionReportServices;
+  handOver?: MissionReportHandOver;
+};
+
+export type MissionReportType = "main" | "secondary";
 
 export type MissionReportPersonCounts = {
   rescued?: number;
@@ -2159,15 +2181,19 @@ export type CreateMissionQuestionnaireResponse =
   CreateMissionQuestionnaireResponses[keyof CreateMissionQuestionnaireResponses];
 
 export type UpdateMissionReportDataData = {
-  body: MissionReportData;
+  body: UpdateMissionReportData;
   path: {
     /**
      * The ID of the mission
      */
     missionId: Uuid;
+    /**
+     * The ID of the report
+     */
+    reportId: Id;
   };
   query?: never;
-  url: "/missions/{missionId}/report-data";
+  url: "/missions/{missionId}/report-data/{reportId}";
 };
 
 export type UpdateMissionReportDataErrors = {
