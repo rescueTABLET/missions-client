@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.20.0
+
+### Minor Changes
+
+- 259a4f8: A mission can now have multiple mission reports
+
 ## 0.19.1
 
 ### Patch Changes
