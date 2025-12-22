@@ -4,6 +4,7 @@ import type {
   Identifiable,
   MapElement,
   Mission,
+  MissionReportData,
   Patient,
   Questionnaire,
   Report,
@@ -23,6 +24,7 @@ export type FirestoreMission = Omit<
   | "patients"
   | "attendances"
   | "questionnaires"
+  | "reportData"
 > & {
   resources?: Record<string, Omit<Resource, "id">>;
   removedResources?: Record<string, Omit<Resource, "id">>;
@@ -33,6 +35,7 @@ export type FirestoreMission = Omit<
   sections?: Record<string, Omit<Section, "id">>;
   attendances?: Record<string, Omit<Attendance, "id">>;
   questionnaires?: Record<string, Omit<Questionnaire, "id">>;
+  reportData?: Record<string, Omit<MissionReportData, "id">>;
   patientIds?: ReadonlyArray<string>;
 };
 
@@ -53,6 +56,7 @@ export function fromFirestoreMission(
     sections: mapToArray(data.sections),
     attendances: mapToArray(data.attendances),
     questionnaires: mapToArray(data.questionnaires),
+    reportData: mapToArray(data.reportData),
     stale: stale ?? false,
   };
 }
