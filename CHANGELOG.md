@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.20.1
+
+### Patch Changes
+
+- 2c6bd32: Fix parsing of mission reports from Firestore
+
 ## 0.20.0
 
 ### Minor Changes
