@@ -1,5 +1,12 @@
 # @rescuetablet/missions-client
 
+## 0.21.0
+
+### Minor Changes
+
+- 982cd7f: Migrate from npm to pnpm
+- 081ef70: Add event metadata
+
 ## 0.20.1
 
 ### Patch Changes
