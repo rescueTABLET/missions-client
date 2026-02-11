@@ -138,7 +138,23 @@ export type MissionsList = {
   items: Array<MissionBase>;
 };
 
-export type CreateMissionInput = MissionData &
+export type MutationBase = {
+  meta?: MutationMeta;
+};
+
+export type MutationMeta = {
+  /**
+   * An optional identifier of the source of this mutation, e.g. the name of the client application or system that triggered this mutation. It will appear verbatim in events produced by this mutation.
+   */
+  source?: string;
+  /**
+   * An optional correlation ID to correlate this mutation with other operations in the client's system. It will appear verbatim in events produced by this mutation.
+   */
+  correlationId?: string;
+};
+
+export type CreateMissionInput = MutationBase &
+  MissionData &
   CreatedAtInput & {
     /**
      * The IDs of the groups for which this mission should be visible. If none are passed, the mission is created for all groups the client has `create` permission for.
@@ -156,7 +172,9 @@ export type PostMissionInput = CreateMissionInput & {
   externalId: string;
 };
 
-export type UpdateMissionInput = OptionalMissionData & UpdatedAtInput;
+export type UpdateMissionInput = MutationBase &
+  OptionalMissionData &
+  UpdatedAtInput;
 
 export type ActionData = {
   text: string;
@@ -165,7 +183,8 @@ export type ActionData = {
 
 export type Action = Identifiable & CreationTimestamp & ActionData;
 
-export type CreateActionInput = ActionData &
+export type CreateActionInput = MutationBase &
+  ActionData &
   CreatedAtInput & {
     id?: Id;
   };
@@ -210,7 +229,8 @@ export type ReportPublicationStatusFailed = {
 
 export type Report = Identifiable & CreationTimestamp & ReportData;
 
-export type CreateReportInput = ReportData &
+export type CreateReportInput = MutationBase &
+  ReportData &
   CreatedAtInput & {
     id?: Id;
   };
@@ -268,13 +288,14 @@ export type Resource = Identifiable &
     removed?: boolean;
   };
 
-export type AddResourceInput = ResourceData &
+export type AddResourceInput = MutationBase &
+  ResourceData &
   CreatedAtInput &
   ResourceTimestamps & {
     id?: Id;
   };
 
-export type UpdateResourceInput = {
+export type UpdateResourceInput = MutationBase & {
   name?: string;
   identifier?: string;
   status?: string;
@@ -282,7 +303,7 @@ export type UpdateResourceInput = {
   location?: Coordinates;
 } & UpdatedAtInput;
 
-export type RemoveResourceInput = {
+export type RemoveResourceInput = MutationBase & {
   updatedAt?: Timestamp;
 };
 
@@ -303,6 +324,8 @@ export type MissionMapElementList = {
 };
 
 export type MapElement = Identifiable & Timestamps & MapElementData;
+
+export type SetMapElementInput = MutationBase & MapElementData;
 
 export type MapElementData = MapElementBaseData &
   Tagged &
@@ -378,6 +401,8 @@ export type SectionData = {
   unregisteredPatientCounts?: Array<PatientCounts>;
 } & Tagged;
 
+export type SetSectionInput = MutationBase & SectionData;
+
 export type PatientCapacity = {
   triageCategory: PatientTriageCategory;
   capacity: number;
@@ -406,6 +431,16 @@ export type SectionsRef = {
 
 export type Event = {
   timestamp: Timestamp;
+  meta?: EventMeta;
+};
+
+export type EventMeta = {
+  /**
+   * The user that caused this event. This is usually the user that performed the action that led to this event, but may be different in some cases, e.g. for automatically generated events.
+   */
+  userId?: string;
+  source?: string;
+  correlationId?: string;
 };
 
 export type MissionCreatedEvent = Event & {
@@ -804,9 +839,10 @@ export type PatientData = {
   SectionsRef &
   Tagged;
 
-export type PatientUpdate = PatientData & {
-  reporter?: string;
-};
+export type PatientUpdate = MutationBase &
+  PatientData & {
+    reporter?: string;
+  };
 
 export type PatientTriageCategory =
   | "immediate"
@@ -883,6 +919,8 @@ export type AddMissionToGroupInput =
 
 export type Attendance = Identifiable & Timestamps & AttendanceData;
 
+export type SetAttendanceInput = MutationBase & AttendanceData;
+
 export type AttendanceData = {
   name: string;
   function?: string;
@@ -938,7 +976,7 @@ export type MissionReportData = {
   handOver?: MissionReportHandOver;
 };
 
-export type UpdateMissionReportData = {
+export type UpdateMissionReportData = MutationBase & {
   reportType?: MissionReportType;
   situationUnderControl?: Timestamp;
   situationCompleted?: Timestamp;
@@ -1621,7 +1659,7 @@ export type RemoveMissionMapElementResponse =
   RemoveMissionMapElementResponses[keyof RemoveMissionMapElementResponses];
 
 export type CreateMissionMapElementData = {
-  body: MapElementData;
+  body: SetMapElementInput;
   path: {
     /**
      * The ID of the mission
@@ -1713,7 +1751,7 @@ export type RemoveMissionSectionResponse =
   RemoveMissionSectionResponses[keyof RemoveMissionSectionResponses];
 
 export type UpdateMissionSectionData = {
-  body: SectionData;
+  body: SetSectionInput;
   path: {
     /**
      * The ID of the mission
@@ -1761,7 +1799,7 @@ export type UpdateMissionSectionResponse =
   UpdateMissionSectionResponses[keyof UpdateMissionSectionResponses];
 
 export type CreateMissionSectionData = {
-  body: SectionData;
+  body: SetSectionInput;
   path: {
     /**
      * The ID of the mission
@@ -1993,7 +2031,7 @@ export type RemoveMissionAttendanceResponse =
   RemoveMissionAttendanceResponses[keyof RemoveMissionAttendanceResponses];
 
 export type UpdateMissionAttendanceData = {
-  body: AttendanceUpdate;
+  body: SetAttendanceInput;
   path: {
     /**
      * The ID of the mission
@@ -2041,7 +2079,7 @@ export type UpdateMissionAttendanceResponse =
   UpdateMissionAttendanceResponses[keyof UpdateMissionAttendanceResponses];
 
 export type CreateMissionAttendanceData = {
-  body: AttendanceData;
+  body: SetAttendanceInput;
   path: {
     /**
      * The ID of the mission
