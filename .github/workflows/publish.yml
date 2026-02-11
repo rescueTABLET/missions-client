@@ -25,22 +25,25 @@ jobs:
           node-version-file: package.json
           registry-url: https://registry.npmjs.org
 
+      - name: Prepare pnpm
+        run: |
+          corepack enable pnpm
+          pnpm config set store-dir .pnpm-store
+
       - name: Cache dependencies
-        id: npm-cache
         uses: actions/cache@v4
         with:
-          path: ./node_modules
-          key: npm-${{ hashFiles('package-lock.json') }}
+          path: .pnpm-store
+          key: pnpm-frontend-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: pnpm install --prefer-offline --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm build
 
       - name: Configure npm authentication
-        run: npm set "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}"
+        run: pnpm set "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -48,7 +51,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: npx changeset publish
+          publish: pnpm run publish
           title: Release
         env:
           GITHUB_TOKEN: ${{ secrets.CHANGESETS_GITHUB_TOKEN }}

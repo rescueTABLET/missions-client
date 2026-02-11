@@ -37,7 +37,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "generate": "openapi-ts && node scripts/post-process-client.js"
+    "generate": "openapi-ts && node scripts/post-process-client.js",
+    "publish": "changeset publish"
   },
   "optionalDependencies": {
     "firebase": ">=12",
