@@ -1,5 +1,11 @@
 # @rescuetablet/missions-client
 
+## 0.22.0
+
+### Minor Changes
+
+- dfdd93f: Neue Patienten-Felder
+
 ## 0.21.0
 
 ### Minor Changes
