@@ -833,6 +833,12 @@ export type PatientData = {
   notes?: string;
   patientAssignmentCode?: string;
   treatmentRefused?: boolean;
+  medicalExamination?: boolean;
+  noTransport?: boolean;
+  psychosocialCare?: boolean;
+  prioritizedTransport?: boolean;
+  pregnant?: boolean;
+  child?: boolean;
   resourceIds?: Array<string>;
   coordinates?: Coordinates;
 } & WithAttachments &
